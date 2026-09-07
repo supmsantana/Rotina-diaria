@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotina Diária</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#161b22;
+    --panel-border:#262e38;
+    --accent:#00d4ff;
+    --accent-dim:#0a8ba8;
+    --text:#e6edf3;
+    --text-dim:#8b98a5;
+    --ok:#3fb950;
+    --warn:#d29922;
+    --danger:#f85149;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans', sans-serif;
+    min-height:100vh;
+    padding:20px 16px 100px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  header{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-bottom:20px;
+  }
+  header h1{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:28px;
+    letter-spacing:0.5px;
+  }
+  header .data{
+    color:var(--text-dim);
+    font-family:'DM Mono', monospace;
+    font-size:13px;
+  }
+  .kpi-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .kpi{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    padding:14px;
+  }
+  .kpi .label{
+    color:var(--text-dim);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.8px;
+    margin-bottom:6px;
+  }
+  .kpi .value{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    color:var(--accent);
+  }
+  .status-banner{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:20px;
+    font-size:13px;
+    color:var(--text-dim);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .status-banner.on{border-color:var(--ok); color:var(--ok);}
+  .status-banner.off{border-color:var(--warn); color:var(--warn);}
+  .status-banner button{
+    margin-left:auto;
+    background:var(--accent);
+    color:#00161c;
+    border:none;
+    border-radius:8px;
+    padding:8px 12px;
+    font-family:'DM Sans', sans-serif;
+    font-weight:600;
+    font-size:12px;
+  }
+  .lista{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:24px;
+  }
+  .item{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .item .hora{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:20px;
+    color:var(--accent);
+    min-width:56px;
+  }
+  .item .texto{
+    flex:1;
+    font-size:15px;
+  }
+  .item.feito .texto{
+    color:var(--text-dim);
+    text-decoration:line-through;
+  }
+  .item .check{
+    width:26px;
+    height:26px;
+    border-radius:8px;
+    border:2px solid var(--panel-border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    color:var(--ok);
+    flex-shrink:0;
+  }
+  .item.feito .check{
+    background:var(--ok);
+    border-color:var(--ok);
+    color:#04220c;
+  }
+  .item .del{
+    color:var(--text-dim);
+    font-size:18px;
+    padding:4px 6px;
+    flex-shrink:0;
+  }
+  .vazio{
+    color:var(--text-dim);
+    text-align:center;
+    padding:30px 10px;
+    font-size:14px;
+  }
+  .add-bar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:var(--panel);
+    border-top:1px solid var(--panel-border);
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    display:flex;
+    gap:8px;
+  }
+  .add-bar input{
+    background:var(--bg);
+    border:1px solid var(--panel-border);
+    color:var(--text);
+    border-radius:8px;
+    padding:10px;
+    font-family:'DM Sans', sans-serif;
+    font-size:14px;
+  }
+  .add-bar input[type="time"]{
+    width:100px;
+    font-family:'DM Mono', monospace;
+  }
+  .add-bar input[type="text"]{
+    flex:1;
+  }
+  .add-bar button{
+    background:var(--accent);
+    color:#00161c;
+    border:none;
+    border-radius:8px;
+    padding:0 16px;
+    font-weight:700;
+    font-family:'Rajdhani', sans-serif;
+    font-size:16px;
+  }
+  .ajuda{
+    font-size:12px;
+    color:var(--text-dim);
+    line-height:1.5;
+    padding:14px;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ROTINA DIÁRIA</h1>
+  <div class="data" id="dataHoje">carregando...</div>
+</header>
+
+<div id="statusBanner" class="status-banner off">
+  Notificações desativadas
+  <button id="btnAtivar">Ativar</button>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">Feitos hoje</div>
+    <div class="value" id="kpiFeitos">0/0</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Próximo</div>
+    <div class="value" id="kpiProximo">--:--</div>
+  </div>
+</div>
+
+<div class="lista" id="lista"></div>
+
+<div class="ajuda" id="ajuda"></div>
+
+<div class="add-bar">
+  <input type="time" id="novaHora" value="08:00">
+  <input type="text" id="novoTexto" placeholder="descrição da ação">
+  <button id="btnAdd">+</button>
+</div>
+
+<script>
+const STORAGE_KEY = 'rotina_itens_v1';
+const CHECK_KEY_PREFIX = 'rotina_check_';
+
+function hojeStr(){
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+
+function carregarItens(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return [];
+  try{ return JSON.parse(raw); }catch(e){ return []; }
+}
+
+function salvarItens(itens){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(itens));
+}
+
+function carregarChecks(){
+  const raw = localStorage.getItem(CHECK_KEY_PREFIX + hojeStr());
+  if(!raw) return {};
+  try{ return JSON.parse(raw); }catch(e){ return {}; }
+}
+
+function salvarChecks(checks){
+  localStorage.setItem(CHECK_KEY_PREFIX + hojeStr(), JSON.stringify(checks));
+}
+
+let itens = carregarItens();
+let checks = carregarChecks();
+
+function ordenarItens(){
+  itens.sort((a,b) => a.hora.localeCompare(b.hora));
+}
+
+function render(){
+  ordenarItens();
+  const lista = document.getElementById('lista');
+  lista.innerHTML = '';
+
+  if(itens.length === 0){
+    lista.innerHTML = '<div class="vazio">Nenhuma ação cadastrada ainda. Adicione abaixo.</div>';
+  }
+
+  itens.forEach(item => {
+    const feito = !!checks[item.id];
+    const div = document.createElement('div');
+    div.className = 'item' + (feito ? ' feito' : '');
+    div.innerHTML = `
+      <div class="check">${feito ? '✓' : ''}</div>
+      <div class="hora">${item.hora}</div>
+      <div class="texto">${escapeHtml(item.texto)}</div>
+      <div class="del">✕</div>
+    `;
+    div.querySelector('.check').addEventListener('click', () => {
+      checks[item.id] = !checks[item.id];
+      salvarChecks(checks);
+      render();
+    });
+    div.querySelector('.del').addEventListener('click', () => {
+      itens = itens.filter(i => i.id !== item.id);
+      salvarItens(itens);
+      render();
+    });
+    lista.appendChild(div);
+  });
+
+  const total = itens.length;
+  const feitos = itens.filter(i => checks[i.id]).length;
+  document.getElementById('kpiFeitos').textContent = `${feitos}/${total}`;
+
+  const agora = new Date();
+  const agoraStr = String(agora.getHours()).padStart(2,'0') + ':' + String(agora.getMinutes()).padStart(2,'0');
+  const proximo = itens.find(i => i.hora >= agoraStr && !checks[i.id]);
+  document.getElementById('kpiProximo').textContent = proximo ? proximo.hora : '--:--';
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+document.getElementById('btnAdd').addEventListener('click', () => {
+  const hora = document.getElementById('novaHora').value;
+  const texto = document.getElementById('novoTexto').value.trim();
+  if(!hora || !texto) return;
+  itens.push({ id: Date.now().toString(36), hora, texto });
+  salvarItens(itens);
+  document.getElementById('novoTexto').value = '';
+  render();
+});
+
+document.getElementById('dataHoje').textContent = new Date().toLocaleDateString('pt-BR', {
+  weekday:'long', day:'2-digit', month:'long'
+});
+
+// --- Notificações ---
+const statusBanner = document.getElementById('statusBanner');
+const btnAtivar = document.getElementById('btnAtivar');
+
+function atualizarStatusBanner(){
+  if(!('Notification' in window)){
+    statusBanner.className = 'status-banner off';
+    statusBanner.firstChild.textContent = 'Este navegador não suporta notificações. ';
+    btnAtivar.style.display = 'none';
+    return;
+  }
+  if(Notification.permission === 'granted'){
+    statusBanner.className = 'status-banner on';
+    statusBanner.firstChild.textContent = 'Notificações ativadas. ';
+    btnAtivar.style.display = 'none';
+  }else{
+    statusBanner.className = 'status-banner off';
+    statusBanner.firstChild.textContent = 'Notificações desativadas. ';
+    btnAtivar.style.display = 'inline-block';
+  }
+}
+
+btnAtivar.addEventListener('click', async () => {
+  const perm = await Notification.requestPermission();
+  atualizarStatusBanner();
+});
+
+let jaNotificadoHoje = {};
+
+function checarENotificar(){
+  if(Notification.permission !== 'granted') return;
+  const agora = new Date();
+  const agoraStr = String(agora.getHours()).padStart(2,'0') + ':' + String(agora.getMinutes()).padStart(2,'0');
+  itens.forEach(item => {
+    const chave = hojeStr() + '_' + item.id;
+    if(item.hora === agoraStr && !jaNotificadoHoje[chave]){
+      jaNotificadoHoje[chave] = true;
+      dispararNotificacao(item.texto, item.hora);
+    }
+  });
+}
+
+function dispararNotificacao(texto, hora){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification('Rotina Diária', {
+        body: `${hora} — ${texto}`,
+        icon: './icons/icon.svg',
+        badge: './icons/icon.svg',
+        tag: 'rotina-' + hora,
+        vibrate: [200, 100, 200]
+      });
+    });
+  }else{
+    new Notification('Rotina Diária', { body: `${hora} — ${texto}` });
+  }
+}
+
+setInterval(() => {
+  checarENotificar();
+  render();
+}, 20000);
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW falhou:', err));
+}
+
+document.getElementById('ajuda').innerHTML =
+  'Para os lembretes funcionarem mesmo com o app em segundo plano, instale este site na tela inicial ' +
+  '(menu do navegador → Adicionar à tela inicial) e mantenha o app aberto ou em segundo plano recente. ' +
+  'Se o Android fechar o app por completo ou o modo economia de bateria estiver ativo, a notificação pode não disparar. ' +
+  'Desativar a otimização de bateria para este app, nas configurações do Android, aumenta a confiabilidade.';
+
+render();
+atualizarStatusBanner();
+</script>
+</body>
+</html>
