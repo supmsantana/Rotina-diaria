@@ -29,7 +29,7 @@
     color:var(--text);
     font-family:'DM Sans', sans-serif;
     min-height:100vh;
-    padding:20px 16px 100px;
+    padding:20px 16px 110px;
     -webkit-tap-highlight-color:transparent;
   }
   header{
@@ -48,6 +48,31 @@
     color:var(--text-dim);
     font-family:'DM Mono', monospace;
     font-size:13px;
+    text-transform:capitalize;
+  }
+  .tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:18px;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:4px;
+  }
+  .tabs button{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--text-dim);
+    font-family:'DM Sans', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    padding:9px 4px;
+    border-radius:8px;
+  }
+  .tabs button.ativa{
+    background:var(--accent);
+    color:#00161c;
   }
   .kpi-row{
     display:grid;
@@ -121,9 +146,18 @@
     color:var(--accent);
     min-width:56px;
   }
-  .item .texto{
+  .item .miolo{
     flex:1;
+    min-width:0;
+  }
+  .item .texto{
     font-size:15px;
+  }
+  .item .tag{
+    font-size:11px;
+    color:var(--text-dim);
+    margin-top:2px;
+    font-family:'DM Mono', monospace;
   }
   .item.feito .texto{
     color:var(--text-dim);
@@ -152,48 +186,218 @@
     padding:4px 6px;
     flex-shrink:0;
   }
+  .item.atrasada{
+    border-color:var(--danger);
+  }
+  .item.atrasada .hora{
+    color:var(--danger);
+  }
+  .badge{
+    display:inline-block;
+    font-size:10px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:6px;
+    margin-left:8px;
+    vertical-align:middle;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+  }
+  .badge.amanha{
+    background:var(--warn);
+    color:#2b1c00;
+  }
+  .badge.atrasada{
+    background:var(--danger);
+    color:#2c0906;
+  }
+  .coluna-titulo{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:22px 0 10px;
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:var(--text-dim);
+  }
+  .coluna-titulo:first-child{ margin-top:0; }
+  .coluna-titulo .ponto{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+  }
+  .coluna-titulo .contagem{
+    margin-left:auto;
+    font-family:'DM Mono', monospace;
+    font-size:12px;
+  }
+  .vazio-coluna{
+    color:var(--text-dim);
+    font-size:13px;
+    padding:8px 2px 4px;
+  }
+  .quadro{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:8px;
+    margin-bottom:24px;
+  }
+  .coluna-quadro{
+    flex:0 0 80%;
+    scroll-snap-align:start;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    min-height:100px;
+  }
+  .coluna-quadro .coluna-titulo{
+    margin:0 0 12px;
+  }
+  .coluna-quadro .item{
+    margin-bottom:10px;
+  }
+  .coluna-quadro .item:last-child{
+    margin-bottom:0;
+  }
   .vazio{
     color:var(--text-dim);
     text-align:center;
     padding:30px 10px;
     font-size:14px;
   }
-  .add-bar{
+  .fab{
     position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
+    right:18px;
+    bottom:calc(18px + env(safe-area-inset-bottom));
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#00161c;
+    border:none;
+    font-size:28px;
+    font-weight:700;
+    box-shadow:0 4px 14px rgba(0,0,0,0.4);
+    z-index:20;
+  }
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    align-items:flex-end;
+    z-index:30;
+  }
+  .overlay.aberto{ display:flex; }
+  .painel-form{
     background:var(--panel);
     border-top:1px solid var(--panel-border);
-    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-radius:16px 16px 0 0;
+    padding:18px 16px calc(18px + env(safe-area-inset-bottom));
+    width:100%;
     display:flex;
-    gap:8px;
+    flex-direction:column;
+    gap:12px;
+    max-height:85vh;
+    overflow-y:auto;
   }
-  .add-bar input{
+  .painel-form h2{
+    font-family:'Rajdhani', sans-serif;
+    font-size:20px;
+    font-weight:700;
+  }
+  .campo{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .campo label{
+    font-size:12px;
+    color:var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+  .campo input, .campo select{
     background:var(--bg);
     border:1px solid var(--panel-border);
     color:var(--text);
     border-radius:8px;
-    padding:10px;
+    padding:11px;
     font-family:'DM Sans', sans-serif;
-    font-size:14px;
+    font-size:15px;
   }
-  .add-bar input[type="time"]{
-    width:100px;
-    font-family:'DM Mono', monospace;
+  .tipo-row{
+    display:flex;
+    gap:8px;
   }
-  .add-bar input[type="text"]{
+  .tipo-row button{
     flex:1;
+    background:var(--bg);
+    border:1px solid var(--panel-border);
+    color:var(--text-dim);
+    border-radius:8px;
+    padding:10px 4px;
+    font-family:'DM Sans', sans-serif;
+    font-weight:600;
+    font-size:13px;
   }
-  .add-bar button{
+  .tipo-row button.selecionado{
     background:var(--accent);
     color:#00161c;
+    border-color:var(--accent);
+  }
+  .dias-semana{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .dias-semana button{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:var(--bg);
+    border:1px solid var(--panel-border);
+    color:var(--text-dim);
+    font-family:'DM Sans', sans-serif;
+    font-weight:600;
+    font-size:13px;
+  }
+  .dias-semana button.selecionado{
+    background:var(--accent);
+    color:#00161c;
+    border-color:var(--accent);
+  }
+  .painel-form .acoes{
+    display:flex;
+    gap:8px;
+    margin-top:6px;
+  }
+  .painel-form .acoes button{
+    flex:1;
     border:none;
-    border-radius:8px;
-    padding:0 16px;
-    font-weight:700;
+    border-radius:10px;
+    padding:13px;
     font-family:'Rajdhani', sans-serif;
+    font-weight:700;
     font-size:16px;
+  }
+  .btn-cancelar{
+    background:var(--bg);
+    color:var(--text-dim);
+    border:1px solid var(--panel-border) !important;
+  }
+  .btn-salvar{
+    background:var(--accent);
+    color:#00161c;
   }
   .ajuda{
     font-size:12px;
@@ -218,7 +422,17 @@
   <button id="btnAtivar">Ativar</button>
 </div>
 
-<div class="kpi-row">
+<div class="tabs">
+  <button id="tabHoje" class="ativa">Hoje</button>
+  <button id="tabTodas">Todas as tarefas</button>
+</div>
+
+<div class="tabs" id="modoQuadroRow" style="display:none;">
+  <button id="modoColunas" class="ativa">Colunas</button>
+  <button id="modoEmpilhado">Empilhado</button>
+</div>
+
+<div class="kpi-row" id="kpiRow">
   <div class="kpi">
     <div class="label">Feitos hoje</div>
     <div class="value" id="kpiFeitos">0/0</div>
@@ -233,88 +447,137 @@
 
 <div class="ajuda" id="ajuda"></div>
 
-<div class="add-bar">
-  <input type="time" id="novaHora" value="08:00">
-  <input type="text" id="novoTexto" placeholder="descrição da ação">
-  <button id="btnAdd">+</button>
+<button class="fab" id="btnAbrirForm">+</button>
+
+<div class="overlay" id="overlay">
+  <div class="painel-form">
+    <h2>Nova ação</h2>
+
+    <div class="campo">
+      <label>Horário</label>
+      <input type="time" id="novaHora" value="08:00">
+    </div>
+
+    <div class="campo">
+      <label>Descrição</label>
+      <input type="text" id="novoTexto" placeholder="ex: enviar relatório">
+    </div>
+
+    <div class="campo">
+      <label>Repetição</label>
+      <div class="tipo-row">
+        <button type="button" data-tipo="diaria" class="selecionado">Diária</button>
+        <button type="button" data-tipo="semanal">Semanal</button>
+        <button type="button" data-tipo="mensal">Mensal</button>
+      </div>
+    </div>
+
+    <div class="campo" id="campoDias" style="display:none;">
+      <label>Dias da semana</label>
+      <div class="dias-semana" id="diasSemana"></div>
+    </div>
+
+    <div class="campo" id="campoDiaMes" style="display:none;">
+      <label>Dia do mês</label>
+      <input type="number" id="diaMes" min="1" max="31" value="1">
+    </div>
+
+    <div class="acoes">
+      <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+      <button type="button" class="btn-salvar" id="btnSalvar">Salvar</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'rotina_itens_v1';
+const STORAGE_KEY = 'rotina_itens_v2';
 const CHECK_KEY_PREFIX = 'rotina_check_';
+const DIAS_LABEL = ['D','S','T','Q','Q','S','S'];
+const DIAS_NOME = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
 
-function hojeStr(){
-  const d = new Date();
-  return d.toISOString().slice(0,10);
-}
+function hojeDate(){ return new Date(); }
+function hojeStr(){ return hojeDate().toISOString().slice(0,10); }
 
 function carregarItens(){
   const raw = localStorage.getItem(STORAGE_KEY);
   if(!raw) return [];
   try{ return JSON.parse(raw); }catch(e){ return []; }
 }
-
-function salvarItens(itens){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(itens));
-}
+function salvarItens(v){ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); }
 
 function carregarChecks(){
   const raw = localStorage.getItem(CHECK_KEY_PREFIX + hojeStr());
   if(!raw) return {};
   try{ return JSON.parse(raw); }catch(e){ return {}; }
 }
-
-function salvarChecks(checks){
-  localStorage.setItem(CHECK_KEY_PREFIX + hojeStr(), JSON.stringify(checks));
-}
+function salvarChecks(v){ localStorage.setItem(CHECK_KEY_PREFIX + hojeStr(), JSON.stringify(v)); }
 
 let itens = carregarItens();
 let checks = carregarChecks();
+let abaAtual = 'hoje';
+let modoQuadro = localStorage.getItem('rotina_modo_quadro') || 'colunas';
+let tipoSelecionado = 'diaria';
+let diasSelecionados = [];
 
-function ordenarItens(){
-  itens.sort((a,b) => a.hora.localeCompare(b.hora));
+function ordenarPorHora(lista){
+  return [...lista].sort((a,b) => a.hora.localeCompare(b.hora));
 }
 
-function render(){
-  ordenarItens();
-  const lista = document.getElementById('lista');
-  lista.innerHTML = '';
+function itemDevidoHoje(item, data){
+  if(item.tipo === 'semanal') return (item.dias || []).includes(data.getDay());
+  if(item.tipo === 'mensal') return Number(item.diaMes) === data.getDate();
+  return true; // diaria
+}
 
-  if(itens.length === 0){
-    lista.innerHTML = '<div class="vazio">Nenhuma ação cadastrada ainda. Adicione abaixo.</div>';
+// Quantos dias faltam até a próxima vez que o item ocorre, a partir de "hoje".
+// 0 = ocorre hoje. null = não foi possível calcular (ex: semanal sem dia marcado).
+function diasAteProximaOcorrencia(item, hoje){
+  if(item.tipo === 'diaria') return 0;
+  if(item.tipo === 'semanal'){
+    const dias = item.dias || [];
+    if(dias.length === 0) return null;
+    const diaAtual = hoje.getDay();
+    for(let i = 0; i < 7; i++){
+      if(dias.includes((diaAtual + i) % 7)) return i;
+    }
+    return null;
   }
+  if(item.tipo === 'mensal'){
+    const diaMes = Number(item.diaMes);
+    for(let i = 0; i < 32; i++){
+      const d = new Date(hoje);
+      d.setDate(d.getDate() + i);
+      if(d.getDate() === diaMes) return i;
+    }
+    return null;
+  }
+  return null;
+}
 
-  itens.forEach(item => {
-    const feito = !!checks[item.id];
-    const div = document.createElement('div');
-    div.className = 'item' + (feito ? ' feito' : '');
-    div.innerHTML = `
-      <div class="check">${feito ? '✓' : ''}</div>
-      <div class="hora">${item.hora}</div>
-      <div class="texto">${escapeHtml(item.texto)}</div>
-      <div class="del">✕</div>
-    `;
-    div.querySelector('.check').addEventListener('click', () => {
-      checks[item.id] = !checks[item.id];
-      salvarChecks(checks);
-      render();
-    });
-    div.querySelector('.del').addEventListener('click', () => {
-      itens = itens.filter(i => i.id !== item.id);
-      salvarItens(itens);
-      render();
-    });
-    lista.appendChild(div);
-  });
+function agoraStrDe(data){
+  return String(data.getHours()).padStart(2,'0') + ':' + String(data.getMinutes()).padStart(2,'0');
+}
 
-  const total = itens.length;
-  const feitos = itens.filter(i => checks[i.id]).length;
-  document.getElementById('kpiFeitos').textContent = `${feitos}/${total}`;
+// Classifica um item em uma das 3 colunas: 'atrasada', 'hoje-coluna', 'futura'
+function classificarItem(item, hoje, checksHoje){
+  const diasAte = diasAteProximaOcorrencia(item, hoje);
 
-  const agora = new Date();
-  const agoraStr = String(agora.getHours()).padStart(2,'0') + ':' + String(agora.getMinutes()).padStart(2,'0');
-  const proximo = itens.find(i => i.hora >= agoraStr && !checks[i.id]);
-  document.getElementById('kpiProximo').textContent = proximo ? proximo.hora : '--:--';
+  if(diasAte === 0){
+    if(checksHoje[item.id]) return { coluna:'hoje-coluna', estado:'feita', diasAte };
+    if(item.hora <= agoraStrDe(hoje)) return { coluna:'atrasada', estado:'atrasada', diasAte };
+    return { coluna:'hoje-coluna', estado:'pendente', diasAte };
+  }
+  if(diasAte === 1) return { coluna:'futura', estado:'amanha', diasAte };
+  return { coluna:'futura', estado:'distante', diasAte: diasAte === null ? 999 : diasAte };
+}
+
+function tagDoItem(item){
+  if(item.tipo === 'semanal'){
+    const nomes = (item.dias || []).slice().sort().map(d => DIAS_LABEL[d]).join(' ');
+    return 'Semanal · ' + nomes;
+  }
+  if(item.tipo === 'mensal') return 'Mensal · dia ' + item.diaMes;
+  return 'Diária';
 }
 
 function escapeHtml(str){
@@ -323,17 +586,248 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
-document.getElementById('btnAdd').addEventListener('click', () => {
-  const hora = document.getElementById('novaHora').value;
-  const texto = document.getElementById('novoTexto').value.trim();
-  if(!hora || !texto) return;
-  itens.push({ id: Date.now().toString(36), hora, texto });
-  salvarItens(itens);
-  document.getElementById('novoTexto').value = '';
+function render(){
+  const lista = document.getElementById('lista');
+  const kpiRow = document.getElementById('kpiRow');
+  lista.innerHTML = '';
+
+  if(abaAtual === 'hoje'){
+    kpiRow.style.display = 'grid';
+    lista.className = 'lista';
+    const hoje = hojeDate();
+    const itensHoje = ordenarPorHora(itens.filter(i => itemDevidoHoje(i, hoje)));
+
+    if(itensHoje.length === 0){
+      lista.innerHTML = '<div class="vazio">Nenhuma ação para hoje. Toque em + para cadastrar.</div>';
+    }
+
+    itensHoje.forEach(item => {
+      const feito = !!checks[item.id];
+      const atrasada = !feito && item.hora <= agoraStrDe(hoje);
+      const div = document.createElement('div');
+      div.className = 'item' + (feito ? ' feito' : '') + (atrasada ? ' atrasada' : '');
+      div.innerHTML = `
+        <div class="check">${feito ? '✓' : ''}</div>
+        <div class="hora">${item.hora}</div>
+        <div class="miolo">
+          <div class="texto">${escapeHtml(item.texto)}${atrasada ? '<span class="badge atrasada">atrasada</span>' : ''}</div>
+        </div>
+        <div class="del">✕</div>
+      `;
+      div.querySelector('.check').addEventListener('click', () => {
+        checks[item.id] = !checks[item.id];
+        salvarChecks(checks);
+        render();
+      });
+      div.querySelector('.del').addEventListener('click', () => {
+        itens = itens.filter(i => i.id !== item.id);
+        salvarItens(itens);
+        render();
+      });
+      lista.appendChild(div);
+    });
+
+    const total = itensHoje.length;
+    const feitos = itensHoje.filter(i => checks[i.id]).length;
+    document.getElementById('kpiFeitos').textContent = `${feitos}/${total}`;
+
+    const agoraStr = agoraStrDe(hoje);
+    const proximo = itensHoje.find(i => i.hora >= agoraStr && !checks[i.id]);
+    document.getElementById('kpiProximo').textContent = proximo ? proximo.hora : '--:--';
+
+  }else{
+    kpiRow.style.display = 'none';
+    const hoje = hojeDate();
+
+    const classificados = itens.map(item => ({ item, ...classificarItem(item, hoje, checks) }));
+
+    const colunas = [
+      { chave:'atrasada',    titulo:'Atrasada', cor:'var(--danger)', vazio:'Nenhuma tarefa atrasada.' },
+      { chave:'hoje-coluna', titulo:'Hoje',      cor:'var(--accent)', vazio:'Nada previsto para hoje.' },
+      { chave:'futura',      titulo:'Futura',    cor:'var(--text-dim)', vazio:'Nenhuma tarefa futura cadastrada.' }
+    ];
+
+    function montarCard({ item, estado }){
+      const div = document.createElement('div');
+      div.className = 'item' + (estado === 'atrasada' ? ' atrasada' : '') + (estado === 'feita' ? ' feito' : '');
+      const badgeAmanha = estado === 'amanha' ? '<span class="badge amanha">amanhã</span>' : '';
+      div.innerHTML = `
+        <div class="hora">${item.hora}</div>
+        <div class="miolo">
+          <div class="texto">${escapeHtml(item.texto)}${badgeAmanha}</div>
+          <div class="tag">${tagDoItem(item)}</div>
+        </div>
+        <div class="del">✕</div>
+      `;
+      div.querySelector('.del').addEventListener('click', () => {
+        itens = itens.filter(i => i.id !== item.id);
+        salvarItens(itens);
+        render();
+      });
+      return div;
+    }
+
+    lista.className = modoQuadro === 'colunas' ? 'quadro' : 'lista';
+
+    colunas.forEach(col => {
+      const grupo = classificados
+        .filter(c => c.coluna === col.chave)
+        .sort((a,b) => (a.diasAte - b.diasAte) || a.item.hora.localeCompare(b.item.hora));
+
+      const tituloHtml = `<span class="ponto" style="background:${col.cor}"></span> ${col.titulo} <span class="contagem">${grupo.length}</span>`;
+
+      if(modoQuadro === 'colunas'){
+        const colDiv = document.createElement('div');
+        colDiv.className = 'coluna-quadro';
+        const titulo = document.createElement('div');
+        titulo.className = 'coluna-titulo';
+        titulo.innerHTML = tituloHtml;
+        colDiv.appendChild(titulo);
+
+        if(grupo.length === 0){
+          const vazio = document.createElement('div');
+          vazio.className = 'vazio-coluna';
+          vazio.textContent = col.vazio;
+          colDiv.appendChild(vazio);
+        }else{
+          grupo.forEach(g => colDiv.appendChild(montarCard(g)));
+        }
+        lista.appendChild(colDiv);
+
+      }else{
+        const titulo = document.createElement('div');
+        titulo.className = 'coluna-titulo';
+        titulo.innerHTML = tituloHtml;
+        lista.appendChild(titulo);
+
+        if(grupo.length === 0){
+          const vazio = document.createElement('div');
+          vazio.className = 'vazio-coluna';
+          vazio.textContent = col.vazio;
+          lista.appendChild(vazio);
+        }else{
+          grupo.forEach(g => lista.appendChild(montarCard(g)));
+        }
+      }
+    });
+  }
+}
+
+// --- Abas ---
+document.getElementById('tabHoje').addEventListener('click', () => {
+  abaAtual = 'hoje';
+  document.getElementById('tabHoje').classList.add('ativa');
+  document.getElementById('tabTodas').classList.remove('ativa');
+  document.getElementById('modoQuadroRow').style.display = 'none';
+  render();
+});
+document.getElementById('tabTodas').addEventListener('click', () => {
+  abaAtual = 'todas';
+  document.getElementById('tabTodas').classList.add('ativa');
+  document.getElementById('tabHoje').classList.remove('ativa');
+  document.getElementById('modoQuadroRow').style.display = 'flex';
   render();
 });
 
-document.getElementById('dataHoje').textContent = new Date().toLocaleDateString('pt-BR', {
+document.getElementById('modoColunas').addEventListener('click', () => {
+  modoQuadro = 'colunas';
+  localStorage.setItem('rotina_modo_quadro', modoQuadro);
+  document.getElementById('modoColunas').classList.add('ativa');
+  document.getElementById('modoEmpilhado').classList.remove('ativa');
+  render();
+});
+document.getElementById('modoEmpilhado').addEventListener('click', () => {
+  modoQuadro = 'empilhado';
+  localStorage.setItem('rotina_modo_quadro', modoQuadro);
+  document.getElementById('modoEmpilhado').classList.add('ativa');
+  document.getElementById('modoColunas').classList.remove('ativa');
+  render();
+});
+
+// aplica o modo salvo nos botões antes da primeira renderização
+if(modoQuadro === 'empilhado'){
+  document.getElementById('modoEmpilhado').classList.add('ativa');
+  document.getElementById('modoColunas').classList.remove('ativa');
+}
+
+// --- Formulário de nova ação ---
+const overlay = document.getElementById('overlay');
+document.getElementById('btnAbrirForm').addEventListener('click', () => {
+  overlay.classList.add('aberto');
+});
+document.getElementById('btnCancelar').addEventListener('click', fecharForm);
+overlay.addEventListener('click', (e) => { if(e.target === overlay) fecharForm(); });
+
+function fecharForm(){
+  overlay.classList.remove('aberto');
+  document.getElementById('novoTexto').value = '';
+  document.getElementById('novaHora').value = '08:00';
+  document.getElementById('diaMes').value = 1;
+  tipoSelecionado = 'diaria';
+  diasSelecionados = [];
+  document.querySelectorAll('.tipo-row button').forEach(b => b.classList.toggle('selecionado', b.dataset.tipo === 'diaria'));
+  atualizarCamposTipo();
+  montarDiasSemana();
+}
+
+document.querySelectorAll('.tipo-row button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    tipoSelecionado = btn.dataset.tipo;
+    document.querySelectorAll('.tipo-row button').forEach(b => b.classList.remove('selecionado'));
+    btn.classList.add('selecionado');
+    atualizarCamposTipo();
+  });
+});
+
+function atualizarCamposTipo(){
+  document.getElementById('campoDias').style.display = tipoSelecionado === 'semanal' ? 'flex' : 'none';
+  document.getElementById('campoDiaMes').style.display = tipoSelecionado === 'mensal' ? 'flex' : 'none';
+}
+
+function montarDiasSemana(){
+  const cont = document.getElementById('diasSemana');
+  cont.innerHTML = '';
+  DIAS_LABEL.forEach((label, idx) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = label;
+    b.title = DIAS_NOME[idx];
+    b.addEventListener('click', () => {
+      const pos = diasSelecionados.indexOf(idx);
+      if(pos === -1) diasSelecionados.push(idx); else diasSelecionados.splice(pos, 1);
+      b.classList.toggle('selecionado');
+    });
+    cont.appendChild(b);
+  });
+}
+montarDiasSemana();
+
+document.getElementById('btnSalvar').addEventListener('click', () => {
+  const hora = document.getElementById('novaHora').value;
+  const texto = document.getElementById('novoTexto').value.trim();
+  if(!hora || !texto) return;
+
+  if(tipoSelecionado === 'semanal' && diasSelecionados.length === 0){
+    alert('Selecione ao menos um dia da semana.');
+    return;
+  }
+
+  const novoItem = {
+    id: Date.now().toString(36),
+    hora,
+    texto,
+    tipo: tipoSelecionado
+  };
+  if(tipoSelecionado === 'semanal') novoItem.dias = [...diasSelecionados].sort();
+  if(tipoSelecionado === 'mensal') novoItem.diaMes = Number(document.getElementById('diaMes').value) || 1;
+
+  itens.push(novoItem);
+  salvarItens(itens);
+  fecharForm();
+  render();
+});
+
+document.getElementById('dataHoje').textContent = hojeDate().toLocaleDateString('pt-BR', {
   weekday:'long', day:'2-digit', month:'long'
 });
 
@@ -360,7 +854,7 @@ function atualizarStatusBanner(){
 }
 
 btnAtivar.addEventListener('click', async () => {
-  const perm = await Notification.requestPermission();
+  await Notification.requestPermission();
   atualizarStatusBanner();
 });
 
@@ -368,14 +862,28 @@ let jaNotificadoHoje = {};
 
 function checarENotificar(){
   if(Notification.permission !== 'granted') return;
-  const agora = new Date();
-  const agoraStr = String(agora.getHours()).padStart(2,'0') + ':' + String(agora.getMinutes()).padStart(2,'0');
-  itens.forEach(item => {
+  const hoje = hojeDate();
+  const agoraStr = String(hoje.getHours()).padStart(2,'0') + ':' + String(hoje.getMinutes()).padStart(2,'0');
+  itens.filter(i => itemDevidoHoje(i, hoje)).forEach(item => {
     const chave = hojeStr() + '_' + item.id;
     if(item.hora === agoraStr && !jaNotificadoHoje[chave]){
       jaNotificadoHoje[chave] = true;
       dispararNotificacao(item.texto, item.hora);
     }
+  });
+}
+
+function checarAvisoAmanha(){
+  if(Notification.permission !== 'granted') return;
+  const hoje = hojeDate();
+  const chaveDia = hojeStr();
+  itens.forEach(item => {
+    if(item.tipo === 'diaria') return;
+    if(diasAteProximaOcorrencia(item, hoje) !== 1) return;
+    const chave = 'rotina_aviso_amanha_' + chaveDia + '_' + item.id;
+    if(localStorage.getItem(chave)) return;
+    localStorage.setItem(chave, '1');
+    dispararNotificacao('Amanhã: ' + item.texto, item.hora);
   });
 }
 
@@ -397,18 +905,22 @@ function dispararNotificacao(texto, hora){
 
 setInterval(() => {
   checarENotificar();
+  checarAvisoAmanha();
   render();
 }, 20000);
+
+checarAvisoAmanha();
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW falhou:', err));
 }
 
 document.getElementById('ajuda').innerHTML =
-  'Para os lembretes funcionarem mesmo com o app em segundo plano, instale este site na tela inicial ' +
-  '(menu do navegador → Adicionar à tela inicial) e mantenha o app aberto ou em segundo plano recente. ' +
-  'Se o Android fechar o app por completo ou o modo economia de bateria estiver ativo, a notificação pode não disparar. ' +
-  'Desativar a otimização de bateria para este app, nas configurações do Android, aumenta a confiabilidade.';
+  'Tarefas semanais disparam nos dias marcados. Tarefas mensais disparam no dia do mês escolhido ' +
+  '(se o mês não tiver esse dia, tipo dia 31 em fevereiro, a tarefa não aparece naquele mês). ' +
+  'Uma tarefa vira "atrasada" quando o horário passa e ela não foi marcada como feita. ' +
+  'Tarefas semanais e mensais que caem amanhã aparecem com o aviso "amanhã" na aba Todas as tarefas, e mandam uma notificação com um dia de antecedência. ' +
+  'Para os lembretes funcionarem em segundo plano, instale este site na tela inicial e evite que o Android force o fechamento do app.';
 
 render();
 atualizarStatusBanner();
