@@ -491,7 +491,7 @@
 
 <script>
 const STORAGE_KEY = 'rotina_itens_v2';
-const CHECK_KEY_PREFIX = 'rotina_check_';
+const ESTADOS_KEY = 'rotina_estados_v1';
 const DIAS_LABEL = ['D','S','T','Q','Q','S','S'];
 const DIAS_NOME = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
 
@@ -505,15 +505,18 @@ function carregarItens(){
 }
 function salvarItens(v){ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); }
 
-function carregarChecks(){
-  const raw = localStorage.getItem(CHECK_KEY_PREFIX + hojeStr());
+// estados[item.id] = { ultimaConclusao: 'YYYY-MM-DD'|undefined, pendenteDesde: 'YYYY-MM-DD'|undefined }
+// pendenteDesde grava a data em que a tarefa ficou atrasada e SÓ é apagado quando o usuário marca como concluída,
+// então uma tarefa atrasada continua atrasada mesmo depois que o dia vira, até ser resolvida.
+function carregarEstados(){
+  const raw = localStorage.getItem(ESTADOS_KEY);
   if(!raw) return {};
   try{ return JSON.parse(raw); }catch(e){ return {}; }
 }
-function salvarChecks(v){ localStorage.setItem(CHECK_KEY_PREFIX + hojeStr(), JSON.stringify(v)); }
+function salvarEstados(v){ localStorage.setItem(ESTADOS_KEY, JSON.stringify(v)); }
 
 let itens = carregarItens();
-let checks = carregarChecks();
+let estados = carregarEstados();
 let abaAtual = 'hoje';
 let modoQuadro = localStorage.getItem('rotina_modo_quadro') || 'colunas';
 let tipoSelecionado = 'diaria';
@@ -558,17 +561,62 @@ function agoraStrDe(data){
   return String(data.getHours()).padStart(2,'0') + ':' + String(data.getMinutes()).padStart(2,'0');
 }
 
-// Classifica um item em uma das 3 colunas: 'atrasada', 'hoje-coluna', 'futura'
-function classificarItem(item, hoje, checksHoje){
-  const diasAte = diasAteProximaOcorrencia(item, hoje);
+// Percorre os itens e marca como "pendenteDesde" toda tarefa cujo horário já passou hoje
+// e que ainda não tinha sido sinalizada como atrasada. Essa marca só é apagada quando o
+// usuário marca a tarefa como concluída, então ela sobrevive à virada do dia.
+function atualizarPendencias(){
+  const hoje = hojeDate();
+  const agoraStr = agoraStrDe(hoje);
+  let mudou = false;
+  itens.forEach(item => {
+    const est = estados[item.id] || {};
+    const concluidoHoje = est.ultimaConclusao === hojeStr();
+    if(!concluidoHoje && !est.pendenteDesde && itemDevidoHoje(item, hoje) && item.hora <= agoraStr){
+      estados[item.id] = { ...est, pendenteDesde: hojeStr() };
+      mudou = true;
+    }
+  });
+  if(mudou) salvarEstados(estados);
+}
 
-  if(diasAte === 0){
-    if(checksHoje[item.id]) return { coluna:'hoje-coluna', estado:'feita', diasAte };
-    if(item.hora <= agoraStrDe(hoje)) return { coluna:'atrasada', estado:'atrasada', diasAte };
-    return { coluna:'hoje-coluna', estado:'pendente', diasAte };
+// Marca (ou desmarca) uma tarefa como concluída. Resolve qualquer pendência em atraso.
+function toggleConcluido(item){
+  const est = estados[item.id] || {};
+  if(est.ultimaConclusao === hojeStr()){
+    delete est.ultimaConclusao;
+  }else{
+    est.ultimaConclusao = hojeStr();
+    delete est.pendenteDesde;
   }
+  estados[item.id] = est;
+  salvarEstados(estados);
+  atualizarPendencias();
+  render();
+}
+
+// Classifica um item em uma das colunas/estados: 'atrasada', 'feita', 'pendente', 'amanha', 'futura'
+function classificarItem(item, hoje){
+  const est = estados[item.id] || {};
+
+  if(est.pendenteDesde){
+    return { coluna:'atrasada', estado:'atrasada', diasAte: 0, referencia: est.pendenteDesde };
+  }
+
+  const devidoHoje = itemDevidoHoje(item, hoje);
+  if(devidoHoje){
+    if(est.ultimaConclusao === hojeStr()) return { coluna:'hoje-coluna', estado:'feita', diasAte:0 };
+    if(item.hora <= agoraStrDe(hoje)) return { coluna:'atrasada', estado:'atrasada', diasAte:0, referencia: hojeStr() };
+    return { coluna:'hoje-coluna', estado:'pendente', diasAte:0 };
+  }
+
+  const diasAte = diasAteProximaOcorrencia(item, hoje);
   if(diasAte === 1) return { coluna:'futura', estado:'amanha', diasAte };
   return { coluna:'futura', estado:'distante', diasAte: diasAte === null ? 999 : diasAte };
+}
+
+function formatarDataCurta(dataStr){
+  const [ano, mes, dia] = dataStr.split('-');
+  return `${dia}/${mes}`;
 }
 
 function tagDoItem(item){
@@ -595,30 +643,34 @@ function render(){
     kpiRow.style.display = 'grid';
     lista.className = 'lista';
     const hoje = hojeDate();
-    const itensHoje = ordenarPorHora(itens.filter(i => itemDevidoHoje(i, hoje)));
+
+    // Mostra as tarefas previstas para hoje MAIS qualquer tarefa atrasada carregada de dias
+    // anteriores (que só some quando marcada como concluída).
+    const itensHoje = ordenarPorHora(
+      itens.filter(i => itemDevidoHoje(i, hoje) || (estados[i.id] && estados[i.id].pendenteDesde))
+    );
 
     if(itensHoje.length === 0){
       lista.innerHTML = '<div class="vazio">Nenhuma ação para hoje. Toque em + para cadastrar.</div>';
     }
 
     itensHoje.forEach(item => {
-      const feito = !!checks[item.id];
-      const atrasada = !feito && item.hora <= agoraStrDe(hoje);
+      const est = estados[item.id] || {};
+      const feito = est.ultimaConclusao === hojeStr();
+      const atrasada = !feito && (!!est.pendenteDesde || item.hora <= agoraStrDe(hoje));
+      const desdeOutroDia = atrasada && est.pendenteDesde && est.pendenteDesde !== hojeStr();
       const div = document.createElement('div');
       div.className = 'item' + (feito ? ' feito' : '') + (atrasada ? ' atrasada' : '');
+      const badgeTexto = desdeOutroDia ? 'atrasada desde ' + formatarDataCurta(est.pendenteDesde) : 'atrasada';
       div.innerHTML = `
         <div class="check">${feito ? '✓' : ''}</div>
         <div class="hora">${item.hora}</div>
         <div class="miolo">
-          <div class="texto">${escapeHtml(item.texto)}${atrasada ? '<span class="badge atrasada">atrasada</span>' : ''}</div>
+          <div class="texto">${escapeHtml(item.texto)}${atrasada ? `<span class="badge atrasada">${badgeTexto}</span>` : ''}</div>
         </div>
         <div class="del">✕</div>
       `;
-      div.querySelector('.check').addEventListener('click', () => {
-        checks[item.id] = !checks[item.id];
-        salvarChecks(checks);
-        render();
-      });
+      div.querySelector('.check').addEventListener('click', () => toggleConcluido(item));
       div.querySelector('.del').addEventListener('click', () => {
         itens = itens.filter(i => i.id !== item.id);
         salvarItens(itens);
@@ -628,18 +680,18 @@ function render(){
     });
 
     const total = itensHoje.length;
-    const feitos = itensHoje.filter(i => checks[i.id]).length;
+    const feitos = itensHoje.filter(i => (estados[i.id] || {}).ultimaConclusao === hojeStr()).length;
     document.getElementById('kpiFeitos').textContent = `${feitos}/${total}`;
 
     const agoraStr = agoraStrDe(hoje);
-    const proximo = itensHoje.find(i => i.hora >= agoraStr && !checks[i.id]);
+    const proximo = itensHoje.find(i => i.hora >= agoraStr && (estados[i.id] || {}).ultimaConclusao !== hojeStr());
     document.getElementById('kpiProximo').textContent = proximo ? proximo.hora : '--:--';
 
   }else{
     kpiRow.style.display = 'none';
     const hoje = hojeDate();
 
-    const classificados = itens.map(item => ({ item, ...classificarItem(item, hoje, checks) }));
+    const classificados = itens.map(item => ({ item, ...classificarItem(item, hoje) }));
 
     const colunas = [
       { chave:'atrasada',    titulo:'Atrasada', cor:'var(--danger)', vazio:'Nenhuma tarefa atrasada.' },
@@ -647,18 +699,24 @@ function render(){
       { chave:'futura',      titulo:'Futura',    cor:'var(--text-dim)', vazio:'Nenhuma tarefa futura cadastrada.' }
     ];
 
-    function montarCard({ item, estado }){
+    function montarCard({ item, estado, referencia }){
       const div = document.createElement('div');
       div.className = 'item' + (estado === 'atrasada' ? ' atrasada' : '') + (estado === 'feita' ? ' feito' : '');
       const badgeAmanha = estado === 'amanha' ? '<span class="badge amanha">amanhã</span>' : '';
+      const badgeAtrasada = estado === 'atrasada' && referencia && referencia !== hojeStr()
+        ? `<span class="badge atrasada">desde ${formatarDataCurta(referencia)}</span>` : '';
+      const mostraCheck = estado === 'atrasada' || estado === 'pendente' || estado === 'feita';
       div.innerHTML = `
+        ${mostraCheck ? `<div class="check">${estado === 'feita' ? '✓' : ''}</div>` : ''}
         <div class="hora">${item.hora}</div>
         <div class="miolo">
-          <div class="texto">${escapeHtml(item.texto)}${badgeAmanha}</div>
+          <div class="texto">${escapeHtml(item.texto)}${badgeAmanha}${badgeAtrasada}</div>
           <div class="tag">${tagDoItem(item)}</div>
         </div>
         <div class="del">✕</div>
       `;
+      const check = div.querySelector('.check');
+      if(check) check.addEventListener('click', () => toggleConcluido(item));
       div.querySelector('.del').addEventListener('click', () => {
         itens = itens.filter(i => i.id !== item.id);
         salvarItens(itens);
@@ -904,11 +962,13 @@ function dispararNotificacao(texto, hora){
 }
 
 setInterval(() => {
+  atualizarPendencias();
   checarENotificar();
   checarAvisoAmanha();
   render();
 }, 20000);
 
+atualizarPendencias();
 checarAvisoAmanha();
 
 if('serviceWorker' in navigator){
@@ -918,7 +978,8 @@ if('serviceWorker' in navigator){
 document.getElementById('ajuda').innerHTML =
   'Tarefas semanais disparam nos dias marcados. Tarefas mensais disparam no dia do mês escolhido ' +
   '(se o mês não tiver esse dia, tipo dia 31 em fevereiro, a tarefa não aparece naquele mês). ' +
-  'Uma tarefa vira "atrasada" quando o horário passa e ela não foi marcada como feita. ' +
+  'Uma tarefa vira "atrasada" quando o horário passa e ela não foi marcada como feita, e continua atrasada mesmo que o dia vire, ' +
+  'só saindo dessa lista quando você marcar como concluída. ' +
   'Tarefas semanais e mensais que caem amanhã aparecem com o aviso "amanhã" na aba Todas as tarefas, e mandam uma notificação com um dia de antecedência. ' +
   'Para os lembretes funcionarem em segundo plano, instale este site na tela inicial e evite que o Android force o fechamento do app.';
 
