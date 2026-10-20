@@ -48,7 +48,6 @@
     color:var(--text-dim);
     font-family:'DM Mono', monospace;
     font-size:13px;
-    text-transform:capitalize;
   }
   .tabs{
     display:flex;
@@ -180,11 +179,24 @@
     border-color:var(--ok);
     color:#04220c;
   }
-  .item .del{
+  .acoes-card{
+    display:flex;
+    flex-shrink:0;
+  }
+  .btn-icone{
+    background:none;
+    border:none;
     color:var(--text-dim);
     font-size:18px;
-    padding:4px 6px;
-    flex-shrink:0;
+    min-width:38px;
+    min-height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+  }
+  .btn-icone:active{
+    background:var(--bg);
   }
   .item.atrasada{
     border-color:var(--danger);
@@ -355,14 +367,30 @@
     color:#00161c;
     border-color:var(--accent);
   }
-  .dias-semana{
-    display:flex;
+  .dias-semana, .dias-mes{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
     gap:6px;
-    flex-wrap:wrap;
+  }
+  .dias-mes button{
+    aspect-ratio:1;
+    border-radius:10px;
+    background:var(--bg);
+    border:1px solid var(--panel-border);
+    color:var(--text-dim);
+    font-family:'DM Sans', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    padding:0;
+  }
+  .dias-mes button.selecionado{
+    background:var(--accent);
+    color:#00161c;
+    border-color:var(--accent);
   }
   .dias-semana button{
-    width:42px;
-    height:42px;
+    aspect-ratio:1;
+    padding:0;
     border-radius:50%;
     background:var(--bg);
     border:1px solid var(--panel-border);
@@ -408,6 +436,119 @@
     border:1px solid var(--panel-border);
     border-radius:12px;
   }
+  .tipo-row button{ font-size:12px; }
+  .badge.encerrada{ background:var(--panel-border); color:var(--text-dim); }
+  .calendario{
+    background:var(--bg);
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:10px;
+  }
+  .cal-topo{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:8px; font-weight:600; font-size:14px;
+  }
+  .cal-topo button{
+    background:var(--panel); border:1px solid var(--panel-border);
+    color:var(--text); border-radius:8px; width:40px; height:36px; font-size:20px;
+  }
+  .cal-grade{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .cal-sem{ text-align:center; font-size:11px; color:var(--text-dim); padding:2px 0; }
+  .cal-grade button{
+    aspect-ratio:1; border-radius:8px; background:var(--panel);
+    border:1px solid transparent; color:var(--text);
+    font-family:'DM Sans', sans-serif; font-size:13px; padding:0;
+  }
+  .cal-grade button.hoje{ border-color:var(--accent); }
+  .cal-grade button.selecionado{ background:var(--accent); color:#00161c; font-weight:700; }
+  .cal-grade button:disabled{ opacity:0.3; }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .chip{
+    background:var(--panel); border:1px solid var(--accent-dim); color:var(--accent);
+    border-radius:999px; padding:6px 10px; font-size:12px;
+  }
+  .chips-vazio{ font-size:12px; color:var(--text-dim); }
+  .linha-alarme{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .linha-alarme .chk{ display:flex; align-items:center; gap:8px; font-size:13px; flex:1; }
+  .linha-alarme .chk input{ width:20px; height:20px; accent-color:var(--accent); }
+  .btn-teste{
+    background:var(--bg); border:1px solid var(--panel-border); color:var(--accent);
+    border-radius:8px; padding:9px 12px; font-size:12px; font-weight:600;
+  }
+  .alarme-overlay{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(13,17,23,0.96);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .alarme-overlay.aberto{ display:flex; }
+  .alarme-caixa{
+    width:100%; max-width:380px; text-align:center;
+    background:var(--panel); border:2px solid var(--accent); border-radius:18px;
+    padding:28px 20px; animation:pulsa 1.2s infinite;
+  }
+  @keyframes pulsa{
+    0%,100%{ box-shadow:0 0 0 0 rgba(0,212,255,0.45); }
+    50%{ box-shadow:0 0 0 18px rgba(0,212,255,0); }
+  }
+  .alarme-icone{ font-size:48px; }
+  .alarme-hora{ font-family:'DM Mono', monospace; font-size:44px; color:var(--accent); margin:6px 0; }
+  .alarme-texto{ font-family:'Rajdhani', sans-serif; font-size:24px; font-weight:700; margin-bottom:6px; word-break:break-word; }
+  .alarme-extra, .alarme-aviso{ font-size:12px; color:var(--text-dim); min-height:16px; }
+  .alarme-botoes{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .alarme-botoes button{
+    border:none; border-radius:12px; padding:15px;
+    font-family:'Rajdhani', sans-serif; font-weight:700; font-size:18px;
+  }
+  .a-concluir{ background:var(--ok); color:#04170a; }
+  .a-adiar{ background:var(--warn); color:#1c1400; }
+  .a-parar{ background:var(--bg); color:var(--text-dim); border:1px solid var(--panel-border) !important; }
+  .nota{ font-size:12px; color:var(--text-dim); margin-top:3px; white-space:pre-wrap; word-break:break-word; }
+  .campo textarea{
+    background:var(--bg); border:1px solid var(--panel-border); color:var(--text);
+    border-radius:8px; padding:11px; font-family:'DM Sans', sans-serif; font-size:15px;
+    resize:vertical; min-height:60px;
+  }
+  .ferramentas{
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:12px;
+    padding:14px; margin-bottom:12px;
+  }
+  .ferramentas h3{ font-family:'Rajdhani', sans-serif; font-size:16px; margin-bottom:10px; }
+  .ferramentas .grade{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ferramentas button{
+    background:var(--bg); border:1px solid var(--panel-border); color:var(--text);
+    border-radius:10px; padding:12px 8px; font-family:'DM Sans', sans-serif; font-size:13px; font-weight:600;
+  }
+  .ferramentas button.ligado{ background:var(--accent); color:#00161c; border-color:var(--accent); }
+  .ferramentas .msg{ font-size:12px; color:var(--text-dim); margin-top:8px; min-height:16px; }
+  .stat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .stat{ background:var(--panel); border:1px solid var(--panel-border); border-radius:12px; padding:14px; }
+  .stat .rot{ font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; }
+  .stat .val{ font-family:'DM Mono', monospace; font-size:26px; color:var(--accent); margin-top:4px; }
+  .stat .sub{ font-size:11px; color:var(--text-dim); margin-top:2px; }
+  .stat-bloco{ background:var(--panel); border:1px solid var(--panel-border); border-radius:12px; padding:14px; margin-top:10px; }
+  .stat-bloco h3{ font-family:'Rajdhani', sans-serif; font-size:16px; margin-bottom:10px; }
+  .barras{ display:flex; align-items:flex-end; gap:8px; height:110px; }
+  .barra-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:4px; }
+  .barra{ width:100%; border-radius:6px 6px 0 0; background:var(--accent); min-height:3px; }
+  .barra.vazia{ background:var(--panel-border); }
+  .barra.cheia{ background:var(--ok); }
+  .barra-pct{ font-size:10px; color:var(--text-dim); }
+  .barra-dia{ font-size:11px; color:var(--text-dim); }
+  .rank-linha{ display:flex; justify-content:space-between; gap:10px; font-size:13px; padding:7px 0; border-top:1px solid var(--panel-border); }
+  .rank-linha:first-of-type{ border-top:none; }
+  .rank-linha span:last-child{ color:var(--warn); font-family:'DM Mono', monospace; white-space:nowrap; }
+  .filtro-cat{ display:flex; gap:6px; overflow-x:auto; padding-bottom:10px; margin-bottom:4px; }
+  .filtro-cat button, .cat-row button{
+    flex-shrink:0; background:var(--bg); border:1px solid var(--panel-border); color:var(--text-dim);
+    border-radius:999px; padding:7px 12px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:600;
+    display:flex; align-items:center; gap:6px;
+  }
+  .filtro-cat button.ativa, .cat-row button.selecionado{ border-color:var(--accent); color:var(--text); background:var(--panel); }
+  .cat-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .cat-ponto{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .item.com-cat{ border-left:4px solid var(--cat-cor); }
 </style>
 </head>
 <body>
@@ -425,12 +566,15 @@
 <div class="tabs">
   <button id="tabHoje" class="ativa">Hoje</button>
   <button id="tabTodas">Todas as tarefas</button>
+  <button id="tabStats">Estatísticas</button>
 </div>
 
 <div class="tabs" id="modoQuadroRow" style="display:none;">
   <button id="modoColunas" class="ativa">Colunas</button>
   <button id="modoEmpilhado">Empilhado</button>
 </div>
+
+<div class="filtro-cat" id="filtroCat" style="display:none;"></div>
 
 <div class="kpi-row" id="kpiRow">
   <div class="kpi">
@@ -445,13 +589,25 @@
 
 <div class="lista" id="lista"></div>
 
+<div class="ferramentas">
+  <h3>Ferramentas</h3>
+  <div class="grade">
+    <button type="button" id="btnBackup">Salvar backup</button>
+    <button type="button" id="btnRestaurar">Restaurar backup</button>
+    <button type="button" id="btnIcs">Enviar para a agenda</button>
+    <button type="button" id="btnTela">Tela sempre acesa: desligada</button>
+  </div>
+  <input type="file" id="arqBackup" accept=".json,application/json" style="display:none">
+  <div class="msg" id="msgFerramentas"></div>
+</div>
+
 <div class="ajuda" id="ajuda"></div>
 
 <button class="fab" id="btnAbrirForm">+</button>
 
 <div class="overlay" id="overlay">
   <div class="painel-form">
-    <h2>Nova ação</h2>
+    <h2 id="tituloForm">Nova ação</h2>
 
     <div class="campo">
       <label>Horário</label>
@@ -464,11 +620,22 @@
     </div>
 
     <div class="campo">
+      <label>Observação (opcional)</label>
+      <textarea id="novaNota" placeholder="ex: ligar para o fornecedor, número do contrato"></textarea>
+    </div>
+
+    <div class="campo">
+      <label>Categoria (opcional)</label>
+      <div class="cat-row" id="catRow"></div>
+    </div>
+
+    <div class="campo">
       <label>Repetição</label>
       <div class="tipo-row">
         <button type="button" data-tipo="diaria" class="selecionado">Diária</button>
         <button type="button" data-tipo="semanal">Semanal</button>
         <button type="button" data-tipo="mensal">Mensal</button>
+        <button type="button" data-tipo="datas">Datas</button>
       </div>
     </div>
 
@@ -478,8 +645,29 @@
     </div>
 
     <div class="campo" id="campoDiaMes" style="display:none;">
-      <label>Dia do mês</label>
-      <input type="number" id="diaMes" min="1" max="31" value="1">
+      <label>Dias do mês (pode marcar vários)</label>
+      <div class="dias-mes" id="diasMesGrid"></div>
+    </div>
+
+    <div class="campo" id="campoDatas" style="display:none;">
+      <label>Escolha as datas no calendário</label>
+      <div class="calendario">
+        <div class="cal-topo">
+          <button type="button" id="calAnt">‹</button>
+          <span id="calTitulo"></span>
+          <button type="button" id="calProx">›</button>
+        </div>
+        <div class="cal-grade" id="calGrid"></div>
+      </div>
+      <div class="chips" id="chipsDatas"></div>
+    </div>
+
+    <div class="linha-alarme">
+      <label class="chk">
+        <input type="checkbox" id="chkAlarme" checked>
+        <span>Tocar alarme (além da notificação)</span>
+      </label>
+      <button type="button" class="btn-teste" id="btnTestarAlarme">Testar som</button>
     </div>
 
     <div class="acoes">
@@ -489,70 +677,156 @@
   </div>
 </div>
 
+<div class="alarme-overlay" id="alarmeOverlay">
+  <div class="alarme-caixa">
+    <div class="alarme-icone">⏰</div>
+    <div class="alarme-hora" id="alarmeHora">--:--</div>
+    <div class="alarme-texto" id="alarmeTexto"></div>
+    <div class="alarme-extra" id="alarmeExtra"></div>
+    <div class="alarme-aviso" id="alarmeAviso"></div>
+    <div class="alarme-botoes">
+      <button type="button" class="a-concluir" id="alarmeConcluir">Concluir</button>
+      <button type="button" class="a-adiar" id="alarmeAdiar">Adiar 10 min</button>
+      <button type="button" class="a-parar" id="alarmeParar">Parar som</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const STORAGE_KEY = 'rotina_itens_v2';
 const ESTADOS_KEY = 'rotina_estados_v1';
+const DISPAROS_KEY = 'rotina_disparos_v1';
+const SONECAS_KEY = 'rotina_sonecas_v1';
+const JANELA_MIN = 15;
+const SONECA_MIN = 10;
+const SOM_MAX_MS = 180000;
 const DIAS_LABEL = ['D','S','T','Q','Q','S','S'];
 const DIAS_NOME = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+const CATEGORIAS = [
+  { id:'trabalho', nome:'Trabalho', cor:'#00d4ff' },
+  { id:'pessoal', nome:'Pessoal', cor:'#bc8cff' },
+  { id:'saude', nome:'Saúde', cor:'#3fb950' },
+  { id:'casa', nome:'Casa', cor:'#d29922' },
+  { id:'estudo', nome:'Estudo', cor:'#58a6ff' },
+  { id:'financas', nome:'Finanças', cor:'#f0883e' }
+];
+const catPorId = (id) => CATEGORIAS.find(c => c.id === id) || null;
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
+const $ = (id) => document.getElementById(id);
+
+function lerJSON(chave, padrao){
+  try{
+    const raw = localStorage.getItem(chave);
+    if(!raw) return padrao;
+    const v = JSON.parse(raw);
+    return (v && typeof v === 'object') ? v : padrao;
+  }catch(e){ return padrao; }
+}
+function gravarJSON(chave, v){
+  try{ localStorage.setItem(chave, JSON.stringify(v)); }catch(e){}
+}
+
+// Data local (YYYY-MM-DD). Não usa UTC, para não virar o dia às 21h no horário de Brasília.
+function dataStr(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
 function hojeDate(){ return new Date(); }
-function hojeStr(){ return hojeDate().toISOString().slice(0,10); }
+function hojeStr(){ return dataStr(hojeDate()); }
+function dataDeStr(s){
+  const [a,m,d] = s.split('-').map(Number);
+  return new Date(a, m-1, d);
+}
+function minutosDe(hhmm){
+  const [h,m] = hhmm.split(':').map(Number);
+  return h*60 + m;
+}
+function formatarDataCurta(s){
+  const [ano, mes, dia] = s.split('-');
+  return `${dia}/${mes}`;
+}
+function formatarDataLonga(s){
+  const d = dataDeStr(s);
+  return `${DIAS_NOME[d.getDay()].slice(0,3)} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+}
 
 function carregarItens(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return [];
-  try{ return JSON.parse(raw); }catch(e){ return []; }
+  const v = lerJSON(STORAGE_KEY, []);
+  return Array.isArray(v) ? v : [];
 }
-function salvarItens(v){ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); }
+function salvarItens(v){ gravarJSON(STORAGE_KEY, v); }
 
-// estados[item.id] = { ultimaConclusao: 'YYYY-MM-DD'|undefined, pendenteDesde: 'YYYY-MM-DD'|undefined }
-// pendenteDesde grava a data em que a tarefa ficou atrasada e SÓ é apagado quando o usuário marca como concluída,
-// então uma tarefa atrasada continua atrasada mesmo depois que o dia vira, até ser resolvida.
+// estados[item.id] = { ultimaConclusao, pendenteDesde }
+// pendenteDesde só é apagado quando o usuário marca a tarefa como concluída.
 function carregarEstados(){
-  const raw = localStorage.getItem(ESTADOS_KEY);
-  if(!raw) return {};
-  try{ return JSON.parse(raw); }catch(e){ return {}; }
+  const v = lerJSON(ESTADOS_KEY, {});
+  // corrige datas futuras gravadas por engano pela versão antiga (que usava UTC)
+  const hj = hojeStr();
+  Object.values(v).forEach(est => {
+    if(est && est.ultimaConclusao && est.ultimaConclusao > hj) est.ultimaConclusao = hj;
+    if(est && est.pendenteDesde && est.pendenteDesde > hj) est.pendenteDesde = hj;
+  });
+  return v;
 }
-function salvarEstados(v){ localStorage.setItem(ESTADOS_KEY, JSON.stringify(v)); }
+function salvarEstados(v){ gravarJSON(ESTADOS_KEY, v); }
 
 let itens = carregarItens();
 let estados = carregarEstados();
+let disparos = lerJSON(DISPAROS_KEY, {});
+const HISTORICO_KEY = 'rotina_historico_v1';
+const INICIO_KEY = 'rotina_stats_inicio';
+let historico = lerJSON(HISTORICO_KEY, {});
+let statsInicio = null;
+try{ statsInicio = localStorage.getItem(INICIO_KEY); if(!statsInicio){ statsInicio = dataStr(new Date()); localStorage.setItem(INICIO_KEY, statsInicio); } }catch(e){ statsInicio = dataStr(new Date()); }
+let sonecas = lerJSON(SONECAS_KEY, {});
 let abaAtual = 'hoje';
-let modoQuadro = localStorage.getItem('rotina_modo_quadro') || 'colunas';
+let modoQuadro = 'colunas';
+try{ modoQuadro = localStorage.getItem('rotina_modo_quadro') || 'colunas'; }catch(e){}
 let tipoSelecionado = 'diaria';
 let diasSelecionados = [];
+let diasMesSelecionados = [];
+let datasSelecionadas = [];
+let editandoId = null;
+let catSelecionada = '';
+let filtroCategoria = '';
+try{ filtroCategoria = localStorage.getItem('rotina_filtro_cat') || ''; }catch(e){}
+let calAno = new Date().getFullYear();
+let calMes = new Date().getMonth();
 
 function ordenarPorHora(lista){
   return [...lista].sort((a,b) => a.hora.localeCompare(b.hora));
 }
 
-function itemDevidoHoje(item, data){
-  if(item.tipo === 'semanal') return (item.dias || []).includes(data.getDay());
-  if(item.tipo === 'mensal') return Number(item.diaMes) === data.getDate();
-  return true; // diaria
+// Dias do mês de um item mensal (aceita o formato antigo, com um único diaMes)
+function diasMesDe(item){
+  if(Array.isArray(item.diasMes)) return item.diasMes.map(Number);
+  if(item.diaMes) return [Number(item.diaMes)];
+  return [];
 }
 
-// Quantos dias faltam até a próxima vez que o item ocorre, a partir de "hoje".
-// 0 = ocorre hoje. null = não foi possível calcular (ex: semanal sem dia marcado).
+function itemDevidoHoje(item, data){
+  if(item.tipo === 'semanal') return (item.dias || []).includes(data.getDay());
+  if(item.tipo === 'mensal') return diasMesDe(item).includes(data.getDate());
+  if(item.tipo === 'datas') return (item.datas || []).includes(dataStr(data));
+  return true;
+}
+
+// Dias até a próxima ocorrência. 0 = hoje. null = nunca mais (ou não configurada).
 function diasAteProximaOcorrencia(item, hoje){
   if(item.tipo === 'diaria') return 0;
-  if(item.tipo === 'semanal'){
-    const dias = item.dias || [];
-    if(dias.length === 0) return null;
-    const diaAtual = hoje.getDay();
-    for(let i = 0; i < 7; i++){
-      if(dias.includes((diaAtual + i) % 7)) return i;
-    }
-    return null;
+  if(item.tipo === 'datas'){
+    const base = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    let melhor = null;
+    (item.datas || []).forEach(s => {
+      const diff = Math.round((dataDeStr(s) - base) / 86400000);
+      if(diff >= 0 && (melhor === null || diff < melhor)) melhor = diff;
+    });
+    return melhor;
   }
-  if(item.tipo === 'mensal'){
-    const diaMes = Number(item.diaMes);
-    for(let i = 0; i < 32; i++){
-      const d = new Date(hoje);
-      d.setDate(d.getDate() + i);
-      if(d.getDate() === diaMes) return i;
-    }
-    return null;
+  const limite = item.tipo === 'semanal' ? 7 : 62;
+  for(let i = 0; i < limite; i++){
+    const d = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + i);
+    if(itemDevidoHoje(item, d)) return i;
   }
   return null;
 }
@@ -561,9 +835,6 @@ function agoraStrDe(data){
   return String(data.getHours()).padStart(2,'0') + ':' + String(data.getMinutes()).padStart(2,'0');
 }
 
-// Percorre os itens e marca como "pendenteDesde" toda tarefa cujo horário já passou hoje
-// e que ainda não tinha sido sinalizada como atrasada. Essa marca só é apagada quando o
-// usuário marca a tarefa como concluída, então ela sobrevive à virada do dia.
 function atualizarPendencias(){
   const hoje = hojeDate();
   const agoraStr = agoraStrDe(hoje);
@@ -579,14 +850,24 @@ function atualizarPendencias(){
   if(mudou) salvarEstados(estados);
 }
 
-// Marca (ou desmarca) uma tarefa como concluída. Resolve qualquer pendência em atraso.
+function registrarHistorico(id, feito){
+  const hj = hojeStr();
+  const lista = new Set(historico[hj] || []);
+  if(feito) lista.add(id); else lista.delete(id);
+  historico[hj] = [...lista];
+  gravarJSON(HISTORICO_KEY, historico);
+}
+
 function toggleConcluido(item){
   const est = estados[item.id] || {};
   if(est.ultimaConclusao === hojeStr()){
     delete est.ultimaConclusao;
+    registrarHistorico(item.id, false);
   }else{
     est.ultimaConclusao = hojeStr();
+    registrarHistorico(item.id, true);
     delete est.pendenteDesde;
+    if(sonecas[item.id]){ delete sonecas[item.id]; gravarJSON(SONECAS_KEY, sonecas); }
   }
   estados[item.id] = est;
   salvarEstados(estados);
@@ -594,7 +875,6 @@ function toggleConcluido(item){
   render();
 }
 
-// Classifica um item em uma das colunas/estados: 'atrasada', 'feita', 'pendente', 'amanha', 'futura'
 function classificarItem(item, hoje){
   const est = estados[item.id] || {};
 
@@ -610,22 +890,29 @@ function classificarItem(item, hoje){
   }
 
   const diasAte = diasAteProximaOcorrencia(item, hoje);
+  if(item.tipo === 'datas' && diasAte === null) return { coluna:'futura', estado:'encerrada', diasAte: 99999 };
   if(diasAte === 1) return { coluna:'futura', estado:'amanha', diasAte };
   return { coluna:'futura', estado:'distante', diasAte: diasAte === null ? 999 : diasAte };
 }
 
-function formatarDataCurta(dataStr){
-  const [ano, mes, dia] = dataStr.split('-');
-  return `${dia}/${mes}`;
-}
-
 function tagDoItem(item){
+  const alarme = item.alarme === false ? '' : ' · ⏰';
+  const c = catPorId(item.categoria);
+  const pre = c ? c.nome + ' · ' : '';
+  return pre + tagBase(item, alarme);
+}
+function tagBase(item, alarme){
   if(item.tipo === 'semanal'){
     const nomes = (item.dias || []).slice().sort().map(d => DIAS_LABEL[d]).join(' ');
-    return 'Semanal · ' + nomes;
+    return 'Semanal · ' + nomes + alarme;
   }
-  if(item.tipo === 'mensal') return 'Mensal · dia ' + item.diaMes;
-  return 'Diária';
+  if(item.tipo === 'mensal') return 'Mensal · dia ' + diasMesDe(item).sort((a,b)=>a-b).join(', ') + alarme;
+  if(item.tipo === 'datas'){
+    const ds = (item.datas || []).slice().sort();
+    const mostra = ds.slice(0,3).map(formatarDataCurta).join(', ');
+    return 'Datas · ' + mostra + (ds.length > 3 ? ' +' + (ds.length-3) : '') + alarme;
+  }
+  return 'Diária' + alarme;
 }
 
 function escapeHtml(str){
@@ -634,20 +921,100 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
+function excluirItem(item){
+  if(!confirm('Excluir "' + item.texto + '"?')) return;
+  itens = itens.filter(i => i.id !== item.id);
+  delete estados[item.id];
+  delete sonecas[item.id];
+  salvarItens(itens); salvarEstados(estados); gravarJSON(SONECAS_KEY, sonecas);
+  render();
+}
+
+function montarCard(info, opcoes){
+  const { item, estado, referencia } = info;
+  const div = document.createElement('div');
+  div.className = 'item' + (estado === 'atrasada' ? ' atrasada' : '') + (estado === 'feita' ? ' feito' : '');
+  const cat = catPorId(item.categoria);
+  if(cat){ div.classList.add('com-cat'); div.style.setProperty('--cat-cor', cat.cor); }
+  const badgeAmanha = estado === 'amanha' ? '<span class="badge amanha">amanhã</span>' : '';
+  const badgeEnc = estado === 'encerrada' ? '<span class="badge encerrada">encerrada</span>' : '';
+  let badgeAtrasada = '';
+  if(estado === 'atrasada'){
+    badgeAtrasada = (referencia && referencia !== hojeStr())
+      ? `<span class="badge atrasada">atrasada desde ${formatarDataCurta(referencia)}</span>`
+      : '<span class="badge atrasada">atrasada</span>';
+  }
+  const mostraCheck = estado === 'atrasada' || estado === 'pendente' || estado === 'feita';
+  div.innerHTML = `
+    ${mostraCheck ? `<div class="check">${estado === 'feita' ? '✓' : ''}</div>` : ''}
+    <div class="hora">${item.hora}</div>
+    <div class="miolo">
+      <div class="texto">${escapeHtml(item.texto)}${badgeAmanha}${badgeEnc}${badgeAtrasada}</div>
+      <div class="tag">${tagDoItem(item)}</div>
+      ${item.nota ? `<div class="nota">${escapeHtml(item.nota)}</div>` : ''}
+    </div>
+    <div class="acoes-card">
+      <button type="button" class="btn-icone editar" title="Editar">✎</button>
+      <button type="button" class="btn-icone excluir" title="Excluir">✕</button>
+    </div>
+  `;
+  const check = div.querySelector('.check');
+  if(check) check.addEventListener('click', () => toggleConcluido(item));
+  div.querySelector('.editar').addEventListener('click', () => abrirForm(item));
+  div.querySelector('.excluir').addEventListener('click', () => excluirItem(item));
+  return div;
+}
+
+function itensVisiveis(){
+  return filtroCategoria ? itens.filter(i => i.categoria === filtroCategoria) : itens;
+}
+function montarFiltro(){
+  const box = $('filtroCat');
+  const usadas = CATEGORIAS.filter(c => itens.some(i => i.categoria === c.id));
+  if(filtroCategoria && !usadas.some(c => c.id === filtroCategoria)){ filtroCategoria = ''; }
+  if(abaAtual === 'stats' || usadas.length === 0){ box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  box.innerHTML = '';
+  const todas = document.createElement('button');
+  todas.type = 'button'; todas.textContent = 'Todas';
+  todas.classList.toggle('ativa', !filtroCategoria);
+  todas.addEventListener('click', () => definirFiltro(''));
+  box.appendChild(todas);
+  usadas.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = `<span class="cat-ponto" style="background:${c.cor}"></span>${c.nome}`;
+    b.classList.toggle('ativa', filtroCategoria === c.id);
+    b.addEventListener('click', () => definirFiltro(c.id));
+    box.appendChild(b);
+  });
+}
+function definirFiltro(id){
+  filtroCategoria = id;
+  try{ localStorage.setItem('rotina_filtro_cat', id); }catch(e){}
+  render();
+}
+
 function render(){
-  const lista = document.getElementById('lista');
-  const kpiRow = document.getElementById('kpiRow');
+  montarFiltro();
+  const lista = $('lista');
+  const kpiRow = $('kpiRow');
   lista.innerHTML = '';
+  const hoje = hojeDate();
+
+  if(abaAtual === 'stats'){
+    kpiRow.style.display = 'none';
+    lista.className = 'lista';
+    renderStats(lista);
+    return;
+  }
 
   if(abaAtual === 'hoje'){
     kpiRow.style.display = 'grid';
     lista.className = 'lista';
-    const hoje = hojeDate();
 
-    // Mostra as tarefas previstas para hoje MAIS qualquer tarefa atrasada carregada de dias
-    // anteriores (que só some quando marcada como concluída).
     const itensHoje = ordenarPorHora(
-      itens.filter(i => itemDevidoHoje(i, hoje) || (estados[i.id] && estados[i.id].pendenteDesde))
+      itensVisiveis().filter(i => itemDevidoHoje(i, hoje) || (estados[i.id] && estados[i.id].pendenteDesde))
     );
 
     if(itensHoje.length === 0){
@@ -655,75 +1022,28 @@ function render(){
     }
 
     itensHoje.forEach(item => {
-      const est = estados[item.id] || {};
-      const feito = est.ultimaConclusao === hojeStr();
-      const atrasada = !feito && (!!est.pendenteDesde || item.hora <= agoraStrDe(hoje));
-      const desdeOutroDia = atrasada && est.pendenteDesde && est.pendenteDesde !== hojeStr();
-      const div = document.createElement('div');
-      div.className = 'item' + (feito ? ' feito' : '') + (atrasada ? ' atrasada' : '');
-      const badgeTexto = desdeOutroDia ? 'atrasada desde ' + formatarDataCurta(est.pendenteDesde) : 'atrasada';
-      div.innerHTML = `
-        <div class="check">${feito ? '✓' : ''}</div>
-        <div class="hora">${item.hora}</div>
-        <div class="miolo">
-          <div class="texto">${escapeHtml(item.texto)}${atrasada ? `<span class="badge atrasada">${badgeTexto}</span>` : ''}</div>
-        </div>
-        <div class="del">✕</div>
-      `;
-      div.querySelector('.check').addEventListener('click', () => toggleConcluido(item));
-      div.querySelector('.del').addEventListener('click', () => {
-        itens = itens.filter(i => i.id !== item.id);
-        salvarItens(itens);
-        render();
-      });
-      lista.appendChild(div);
+      const info = { item, ...classificarItem(item, hoje) };
+      lista.appendChild(montarCard(info));
     });
 
     const total = itensHoje.length;
     const feitos = itensHoje.filter(i => (estados[i.id] || {}).ultimaConclusao === hojeStr()).length;
-    document.getElementById('kpiFeitos').textContent = `${feitos}/${total}`;
+    $('kpiFeitos').textContent = `${feitos}/${total}`;
 
     const agoraStr = agoraStrDe(hoje);
     const proximo = itensHoje.find(i => i.hora >= agoraStr && (estados[i.id] || {}).ultimaConclusao !== hojeStr());
-    document.getElementById('kpiProximo').textContent = proximo ? proximo.hora : '--:--';
+    $('kpiProximo').textContent = proximo ? proximo.hora : '--:--';
 
   }else{
     kpiRow.style.display = 'none';
-    const hoje = hojeDate();
 
-    const classificados = itens.map(item => ({ item, ...classificarItem(item, hoje) }));
+    const classificados = itensVisiveis().map(item => ({ item, ...classificarItem(item, hoje) }));
 
     const colunas = [
       { chave:'atrasada',    titulo:'Atrasada', cor:'var(--danger)', vazio:'Nenhuma tarefa atrasada.' },
       { chave:'hoje-coluna', titulo:'Hoje',      cor:'var(--accent)', vazio:'Nada previsto para hoje.' },
       { chave:'futura',      titulo:'Futura',    cor:'var(--text-dim)', vazio:'Nenhuma tarefa futura cadastrada.' }
     ];
-
-    function montarCard({ item, estado, referencia }){
-      const div = document.createElement('div');
-      div.className = 'item' + (estado === 'atrasada' ? ' atrasada' : '') + (estado === 'feita' ? ' feito' : '');
-      const badgeAmanha = estado === 'amanha' ? '<span class="badge amanha">amanhã</span>' : '';
-      const badgeAtrasada = estado === 'atrasada' && referencia && referencia !== hojeStr()
-        ? `<span class="badge atrasada">desde ${formatarDataCurta(referencia)}</span>` : '';
-      const mostraCheck = estado === 'atrasada' || estado === 'pendente' || estado === 'feita';
-      div.innerHTML = `
-        ${mostraCheck ? `<div class="check">${estado === 'feita' ? '✓' : ''}</div>` : ''}
-        <div class="hora">${item.hora}</div>
-        <div class="miolo">
-          <div class="texto">${escapeHtml(item.texto)}${badgeAmanha}${badgeAtrasada}</div>
-          <div class="tag">${tagDoItem(item)}</div>
-        </div>
-        <div class="del">✕</div>
-      `;
-      const check = div.querySelector('.check');
-      if(check) check.addEventListener('click', () => toggleConcluido(item));
-      div.querySelector('.del').addEventListener('click', () => {
-        itens = itens.filter(i => i.id !== item.id);
-        salvarItens(itens);
-        render();
-      });
-      return div;
-    }
 
     lista.className = modoQuadro === 'colunas' ? 'quadro' : 'lista';
 
@@ -733,123 +1053,73 @@ function render(){
         .sort((a,b) => (a.diasAte - b.diasAte) || a.item.hora.localeCompare(b.item.hora));
 
       const tituloHtml = `<span class="ponto" style="background:${col.cor}"></span> ${col.titulo} <span class="contagem">${grupo.length}</span>`;
+      const destino = modoQuadro === 'colunas' ? document.createElement('div') : lista;
+      if(modoQuadro === 'colunas') destino.className = 'coluna-quadro';
 
-      if(modoQuadro === 'colunas'){
-        const colDiv = document.createElement('div');
-        colDiv.className = 'coluna-quadro';
-        const titulo = document.createElement('div');
-        titulo.className = 'coluna-titulo';
-        titulo.innerHTML = tituloHtml;
-        colDiv.appendChild(titulo);
+      const titulo = document.createElement('div');
+      titulo.className = 'coluna-titulo';
+      titulo.innerHTML = tituloHtml;
+      destino.appendChild(titulo);
 
-        if(grupo.length === 0){
-          const vazio = document.createElement('div');
-          vazio.className = 'vazio-coluna';
-          vazio.textContent = col.vazio;
-          colDiv.appendChild(vazio);
-        }else{
-          grupo.forEach(g => colDiv.appendChild(montarCard(g)));
-        }
-        lista.appendChild(colDiv);
-
+      if(grupo.length === 0){
+        const vazio = document.createElement('div');
+        vazio.className = 'vazio-coluna';
+        vazio.textContent = col.vazio;
+        destino.appendChild(vazio);
       }else{
-        const titulo = document.createElement('div');
-        titulo.className = 'coluna-titulo';
-        titulo.innerHTML = tituloHtml;
-        lista.appendChild(titulo);
-
-        if(grupo.length === 0){
-          const vazio = document.createElement('div');
-          vazio.className = 'vazio-coluna';
-          vazio.textContent = col.vazio;
-          lista.appendChild(vazio);
-        }else{
-          grupo.forEach(g => lista.appendChild(montarCard(g)));
-        }
+        grupo.forEach(g => destino.appendChild(montarCard(g)));
       }
+      if(modoQuadro === 'colunas') lista.appendChild(destino);
     });
   }
 }
 
 // --- Abas ---
-document.getElementById('tabHoje').addEventListener('click', () => {
-  abaAtual = 'hoje';
-  document.getElementById('tabHoje').classList.add('ativa');
-  document.getElementById('tabTodas').classList.remove('ativa');
-  document.getElementById('modoQuadroRow').style.display = 'none';
+function setAba(aba){
+  abaAtual = aba;
+  $('tabHoje').classList.toggle('ativa', aba === 'hoje');
+  $('tabTodas').classList.toggle('ativa', aba === 'todas');
+  $('tabStats').classList.toggle('ativa', aba === 'stats');
+  $('modoQuadroRow').style.display = aba === 'todas' ? 'flex' : 'none';
   render();
-});
-document.getElementById('tabTodas').addEventListener('click', () => {
-  abaAtual = 'todas';
-  document.getElementById('tabTodas').classList.add('ativa');
-  document.getElementById('tabHoje').classList.remove('ativa');
-  document.getElementById('modoQuadroRow').style.display = 'flex';
-  render();
-});
-
-document.getElementById('modoColunas').addEventListener('click', () => {
-  modoQuadro = 'colunas';
-  localStorage.setItem('rotina_modo_quadro', modoQuadro);
-  document.getElementById('modoColunas').classList.add('ativa');
-  document.getElementById('modoEmpilhado').classList.remove('ativa');
-  render();
-});
-document.getElementById('modoEmpilhado').addEventListener('click', () => {
-  modoQuadro = 'empilhado';
-  localStorage.setItem('rotina_modo_quadro', modoQuadro);
-  document.getElementById('modoEmpilhado').classList.add('ativa');
-  document.getElementById('modoColunas').classList.remove('ativa');
-  render();
-});
-
-// aplica o modo salvo nos botões antes da primeira renderização
-if(modoQuadro === 'empilhado'){
-  document.getElementById('modoEmpilhado').classList.add('ativa');
-  document.getElementById('modoColunas').classList.remove('ativa');
 }
-
-// --- Formulário de nova ação ---
-const overlay = document.getElementById('overlay');
-document.getElementById('btnAbrirForm').addEventListener('click', () => {
-  overlay.classList.add('aberto');
-});
-document.getElementById('btnCancelar').addEventListener('click', fecharForm);
-overlay.addEventListener('click', (e) => { if(e.target === overlay) fecharForm(); });
-
-function fecharForm(){
-  overlay.classList.remove('aberto');
-  document.getElementById('novoTexto').value = '';
-  document.getElementById('novaHora').value = '08:00';
-  document.getElementById('diaMes').value = 1;
-  tipoSelecionado = 'diaria';
-  diasSelecionados = [];
-  document.querySelectorAll('.tipo-row button').forEach(b => b.classList.toggle('selecionado', b.dataset.tipo === 'diaria'));
-  atualizarCamposTipo();
-  montarDiasSemana();
+$('tabHoje').addEventListener('click', () => setAba('hoje'));
+$('tabTodas').addEventListener('click', () => setAba('todas'));
+$('tabStats').addEventListener('click', () => setAba('stats'));
+function definirModo(modo){
+  modoQuadro = modo;
+  try{ localStorage.setItem('rotina_modo_quadro', modo); }catch(e){}
+  $('modoColunas').classList.toggle('ativa', modo === 'colunas');
+  $('modoEmpilhado').classList.toggle('ativa', modo === 'empilhado');
+  render();
 }
+$('modoColunas').addEventListener('click', () => definirModo('colunas'));
+$('modoEmpilhado').addEventListener('click', () => definirModo('empilhado'));
+$('modoColunas').classList.toggle('ativa', modoQuadro !== 'empilhado');
+$('modoEmpilhado').classList.toggle('ativa', modoQuadro === 'empilhado');
 
-document.querySelectorAll('.tipo-row button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    tipoSelecionado = btn.dataset.tipo;
-    document.querySelectorAll('.tipo-row button').forEach(b => b.classList.remove('selecionado'));
-    btn.classList.add('selecionado');
-    atualizarCamposTipo();
-  });
-});
+// --- Formulário (nova ação / editar) ---
+const overlay = $('overlay');
 
 function atualizarCamposTipo(){
-  document.getElementById('campoDias').style.display = tipoSelecionado === 'semanal' ? 'flex' : 'none';
-  document.getElementById('campoDiaMes').style.display = tipoSelecionado === 'mensal' ? 'flex' : 'none';
+  $('campoDias').style.display = tipoSelecionado === 'semanal' ? 'flex' : 'none';
+  $('campoDiaMes').style.display = tipoSelecionado === 'mensal' ? 'flex' : 'none';
+  $('campoDatas').style.display = tipoSelecionado === 'datas' ? 'flex' : 'none';
+}
+function marcarTipo(){
+  document.querySelectorAll('.tipo-row button').forEach(b => b.classList.toggle('selecionado', b.dataset.tipo === tipoSelecionado));
+  atualizarCamposTipo();
 }
 
 function montarDiasSemana(){
-  const cont = document.getElementById('diasSemana');
+  const cont = $('diasSemana');
   cont.innerHTML = '';
   DIAS_LABEL.forEach((label, idx) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.textContent = label;
     b.title = DIAS_NOME[idx];
+    b.classList.toggle('selecionado', diasSelecionados.includes(idx));
     b.addEventListener('click', () => {
       const pos = diasSelecionados.indexOf(idx);
       if(pos === -1) diasSelecionados.push(idx); else diasSelecionados.splice(pos, 1);
@@ -858,40 +1128,310 @@ function montarDiasSemana(){
     cont.appendChild(b);
   });
 }
-montarDiasSemana();
 
-document.getElementById('btnSalvar').addEventListener('click', () => {
-  const hora = document.getElementById('novaHora').value;
-  const texto = document.getElementById('novoTexto').value.trim();
-  if(!hora || !texto) return;
+function montarDiasMes(){
+  const cont = $('diasMesGrid');
+  cont.innerHTML = '';
+  for(let n = 1; n <= 31; n++){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = n;
+    b.classList.toggle('selecionado', diasMesSelecionados.includes(n));
+    b.addEventListener('click', () => {
+      const pos = diasMesSelecionados.indexOf(n);
+      if(pos === -1) diasMesSelecionados.push(n); else diasMesSelecionados.splice(pos, 1);
+      b.classList.toggle('selecionado');
+    });
+    cont.appendChild(b);
+  }
+}
 
-  if(tipoSelecionado === 'semanal' && diasSelecionados.length === 0){
-    alert('Selecione ao menos um dia da semana.');
+function montarCalendario(){
+  $('calTitulo').textContent = MESES[calMes] + ' ' + calAno;
+  const grade = $('calGrid');
+  grade.innerHTML = '';
+  DIAS_LABEL.forEach(l => {
+    const s = document.createElement('div');
+    s.className = 'cal-sem';
+    s.textContent = l;
+    grade.appendChild(s);
+  });
+  const primeiro = new Date(calAno, calMes, 1).getDay();
+  const total = new Date(calAno, calMes + 1, 0).getDate();
+  for(let i = 0; i < primeiro; i++){
+    const v = document.createElement('div');
+    grade.appendChild(v);
+  }
+  const hj = hojeStr();
+  for(let d = 1; d <= total; d++){
+    const s = dataStr(new Date(calAno, calMes, d));
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = d;
+    b.dataset.data = s;
+    if(s === hj) b.classList.add('hoje');
+    if(s < hj && !datasSelecionadas.includes(s)) b.disabled = true;
+    if(datasSelecionadas.includes(s)) b.classList.add('selecionado');
+    b.addEventListener('click', () => {
+      const pos = datasSelecionadas.indexOf(s);
+      if(pos === -1) datasSelecionadas.push(s); else datasSelecionadas.splice(pos, 1);
+      datasSelecionadas.sort();
+      montarCalendario();
+      montarChips();
+    });
+    grade.appendChild(b);
+  }
+}
+function montarChips(){
+  const c = $('chipsDatas');
+  c.innerHTML = '';
+  if(datasSelecionadas.length === 0){
+    c.innerHTML = '<span class="chips-vazio">Nenhuma data escolhida ainda.</span>';
     return;
   }
+  datasSelecionadas.forEach(s => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = formatarDataLonga(s) + ' ✕';
+    chip.addEventListener('click', () => {
+      datasSelecionadas = datasSelecionadas.filter(x => x !== s);
+      montarCalendario();
+      montarChips();
+    });
+    c.appendChild(chip);
+  });
+}
+$('calAnt').addEventListener('click', () => {
+  calMes--; if(calMes < 0){ calMes = 11; calAno--; }
+  montarCalendario();
+});
+$('calProx').addEventListener('click', () => {
+  calMes++; if(calMes > 11){ calMes = 0; calAno++; }
+  montarCalendario();
+});
 
-  const novoItem = {
-    id: Date.now().toString(36),
-    hora,
-    texto,
-    tipo: tipoSelecionado
-  };
-  if(tipoSelecionado === 'semanal') novoItem.dias = [...diasSelecionados].sort();
-  if(tipoSelecionado === 'mensal') novoItem.diaMes = Number(document.getElementById('diaMes').value) || 1;
+function montarCategorias(){
+  const row = $('catRow');
+  row.innerHTML = '';
+  const opcoes = [{ id:'', nome:'Nenhuma', cor:'var(--panel-border)' }, ...CATEGORIAS];
+  opcoes.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = `<span class="cat-ponto" style="background:${c.cor}"></span>${c.nome}`;
+    b.classList.toggle('selecionado', catSelecionada === c.id);
+    b.addEventListener('click', () => { catSelecionada = c.id; montarCategorias(); });
+    row.appendChild(b);
+  });
+}
 
-  itens.push(novoItem);
+function abrirForm(item){
+  editandoId = item ? item.id : null;
+  $('tituloForm').textContent = item ? 'Editar ação' : 'Nova ação';
+  $('btnSalvar').textContent = item ? 'Salvar alterações' : 'Salvar';
+  $('novaHora').value = item ? item.hora : '08:00';
+  $('novoTexto').value = item ? item.texto : '';
+  $('novaNota').value = item && item.nota ? item.nota : '';
+  tipoSelecionado = item ? (item.tipo || 'diaria') : 'diaria';
+  diasSelecionados = item && item.tipo === 'semanal' ? [...(item.dias || [])] : [];
+  diasMesSelecionados = item && item.tipo === 'mensal' ? diasMesDe(item) : [];
+  datasSelecionadas = item && item.tipo === 'datas' ? [...(item.datas || [])].sort() : [];
+  $('chkAlarme').checked = item ? item.alarme !== false : true;
+  catSelecionada = item && item.categoria ? item.categoria : '';
+  montarCategorias();
+  const ref = datasSelecionadas.length ? dataDeStr(datasSelecionadas[0]) : new Date();
+  calAno = ref.getFullYear(); calMes = ref.getMonth();
+  marcarTipo();
+  montarDiasSemana();
+  montarDiasMes();
+  montarCalendario();
+  montarChips();
+  overlay.classList.add('aberto');
+}
+function fecharForm(){
+  overlay.classList.remove('aberto');
+  editandoId = null;
+}
+
+$('btnAbrirForm').addEventListener('click', () => { garantirAudio(); abrirForm(null); });
+$('btnCancelar').addEventListener('click', fecharForm);
+overlay.addEventListener('click', (e) => { if(e.target === overlay) fecharForm(); });
+
+document.querySelectorAll('.tipo-row button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    tipoSelecionado = btn.dataset.tipo;
+    marcarTipo();
+  });
+});
+
+function limparDisparosDe(id){
+  Object.keys(disparos).forEach(k => { if(k.endsWith('|' + id)) delete disparos[k]; });
+  delete sonecas[id];
+  gravarJSON(DISPAROS_KEY, disparos);
+  gravarJSON(SONECAS_KEY, sonecas);
+}
+
+$('btnSalvar').addEventListener('click', () => {
+  const hora = $('novaHora').value;
+  const texto = $('novoTexto').value.trim();
+  if(!hora || !texto){ alert('Preencha o horário e a descrição.'); return; }
+
+  if(tipoSelecionado === 'semanal' && diasSelecionados.length === 0){
+    alert('Selecione ao menos um dia da semana.'); return;
+  }
+  if(tipoSelecionado === 'mensal' && diasMesSelecionados.length === 0){
+    alert('Selecione ao menos um dia do mês.'); return;
+  }
+  if(tipoSelecionado === 'datas' && datasSelecionadas.length === 0){
+    alert('Escolha ao menos uma data no calendário.'); return;
+  }
+
+  const dados = { hora, texto, tipo: tipoSelecionado, alarme: $('chkAlarme').checked };
+  const nota = $('novaNota').value.trim();
+  if(nota) dados.nota = nota;
+  if(catSelecionada) dados.categoria = catSelecionada;
+  if(tipoSelecionado === 'semanal') dados.dias = [...diasSelecionados].sort();
+  if(tipoSelecionado === 'mensal') dados.diasMes = [...diasMesSelecionados].sort((a,b) => a-b);
+  if(tipoSelecionado === 'datas') dados.datas = [...datasSelecionadas].sort();
+
+  let item;
+  if(editandoId){
+    const idx = itens.findIndex(i => i.id === editandoId);
+    if(idx === -1){ fecharForm(); return; }
+    const antigo = itens[idx];
+    item = { id: antigo.id, ...dados };
+    if(antigo.criadoEm) item.criadoEm = antigo.criadoEm;
+    itens[idx] = item;
+    // mudou horário ou repetição: recomeça o controle de atraso e de avisos
+    if(antigo.hora !== hora || antigo.tipo !== tipoSelecionado){
+      const est = estados[item.id];
+      if(est){ delete est.pendenteDesde; }
+    }
+    limparDisparosDe(item.id);
+  }else{
+    item = { id: Date.now().toString(36) + Math.random().toString(36).slice(2,5), criadoEm: hojeStr(), ...dados };
+    itens.push(item);
+  }
+
+  // Se o horário de hoje já passou ao salvar, não toca alarme retroativo
+  const agora = hojeDate();
+  if(itemDevidoHoje(item, agora) && minutosDe(hora) <= agora.getHours()*60 + agora.getMinutes()){
+    disparos[hojeStr() + '|h|' + item.id] = 1;
+    gravarJSON(DISPAROS_KEY, disparos);
+  }
+
   salvarItens(itens);
+  salvarEstados(estados);
   fecharForm();
+  atualizarPendencias();
   render();
 });
 
-document.getElementById('dataHoje').textContent = hojeDate().toLocaleDateString('pt-BR', {
-  weekday:'long', day:'2-digit', month:'long'
+{
+  const t = hojeDate().toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+  $('dataHoje').textContent = t.charAt(0).toUpperCase() + t.slice(1);
+}
+
+// --- Som e vibração do alarme ---
+let audioCtx = null;
+let somTimer = null;
+let somFim = 0;
+
+function garantirAudio(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!audioCtx) audioCtx = new AC();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+  }catch(e){}
+}
+document.addEventListener('pointerdown', garantirAudio, { passive:true });
+
+function bip(freq, dur, inicio){
+  if(!audioCtx) return;
+  try{
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = freq;
+    const t0 = audioCtx.currentTime + inicio;
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.35, t0 + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(t0); osc.stop(t0 + dur + 0.05);
+  }catch(e){}
+}
+function cicloSom(){
+  if(Date.now() > somFim){ pararSom(); return; }
+  garantirAudio();
+  bip(880, 0.18, 0); bip(880, 0.18, 0.28); bip(1175, 0.30, 0.56);
+  try{ if(navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 500]); }catch(e){}
+}
+function iniciarSom(){
+  pararSom();
+  somFim = Date.now() + SOM_MAX_MS;
+  cicloSom();
+  somTimer = setInterval(cicloSom, 1800);
+  $('alarmeParar').style.display = 'inline-block';
+}
+function pararSom(){
+  if(somTimer){ clearInterval(somTimer); somTimer = null; }
+  try{ if(navigator.vibrate) navigator.vibrate(0); }catch(e){}
+  $('alarmeParar').style.display = 'none';
+}
+
+// --- Janela do alarme (fila: um por vez) ---
+const filaAlarmes = [];
+let alarmeAtual = null;
+
+function mostrarAlarme(item, soneca){
+  if(alarmeAtual && alarmeAtual.item.id === item.id) return;
+  if(filaAlarmes.some(a => a.item.id === item.id)) return;
+  filaAlarmes.push({ item, soneca: !!soneca });
+  if(!alarmeAtual) abrirAlarme();
+}
+function abrirAlarme(){
+  alarmeAtual = filaAlarmes.shift() || null;
+  if(!alarmeAtual) return;
+  const { item, soneca } = alarmeAtual;
+  $('alarmeHora').textContent = item.hora;
+  $('alarmeTexto').textContent = item.texto;
+  $('alarmeExtra').textContent = soneca ? 'Lembrete adiado' : '';
+  $('alarmeAviso').textContent = filaAlarmes.length ? ('Mais ' + filaAlarmes.length + ' alarme(s) na fila') : '';
+  $('alarmeOverlay').classList.add('aberto');
+  iniciarSom();
+}
+function fecharAlarme(){
+  pararSom();
+  $('alarmeOverlay').classList.remove('aberto');
+  alarmeAtual = null;
+  if(filaAlarmes.length) abrirAlarme();
+}
+$('alarmeConcluir').addEventListener('click', () => {
+  if(alarmeAtual){
+    const est = estados[alarmeAtual.item.id] || {};
+    if(est.ultimaConclusao !== hojeStr()) toggleConcluido(alarmeAtual.item);
+  }
+  fecharAlarme();
+});
+$('alarmeAdiar').addEventListener('click', () => {
+  if(alarmeAtual){
+    sonecas[alarmeAtual.item.id] = Date.now() + SONECA_MIN * 60000;
+    gravarJSON(SONECAS_KEY, sonecas);
+  }
+  fecharAlarme();
+});
+$('alarmeParar').addEventListener('click', pararSom);
+
+$('btnTestarAlarme').addEventListener('click', () => {
+  garantirAudio();
+  cicloSom();
+  setTimeout(() => { if(!alarmeAtual) pararSom(); }, 2500);
 });
 
 // --- Notificações ---
-const statusBanner = document.getElementById('statusBanner');
-const btnAtivar = document.getElementById('btnAtivar');
+const statusBanner = $('statusBanner');
+const btnAtivar = $('btnAtivar');
 
 function atualizarStatusBanner(){
   if(!('Notification' in window)){
@@ -904,6 +1444,10 @@ function atualizarStatusBanner(){
     statusBanner.className = 'status-banner on';
     statusBanner.firstChild.textContent = 'Notificações ativadas. ';
     btnAtivar.style.display = 'none';
+  }else if(Notification.permission === 'denied'){
+    statusBanner.className = 'status-banner off';
+    statusBanner.firstChild.textContent = 'Notificações bloqueadas. Libere nas configurações do site no Chrome. O alarme na tela continua funcionando com o app aberto. ';
+    btnAtivar.style.display = 'none';
   }else{
     statusBanner.className = 'status-banner off';
     statusBanner.firstChild.textContent = 'Notificações desativadas. ';
@@ -912,79 +1456,343 @@ function atualizarStatusBanner(){
 }
 
 btnAtivar.addEventListener('click', async () => {
-  await Notification.requestPermission();
+  try{ await Notification.requestPermission(); }catch(e){}
   atualizarStatusBanner();
 });
 
-let jaNotificadoHoje = {};
+function notificar(corpo, tag){
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  try{
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification('Rotina Diária', {
+          body: corpo,
+          icon: './icons/icon.svg',
+          badge: './icons/icon.svg',
+          tag: tag,
+          renotify: true,
+          requireInteraction: true,
+          vibrate: [300, 150, 300, 150, 500]
+        });
+      }).catch(() => {});
+    }else{
+      new Notification('Rotina Diária', { body: corpo });
+    }
+  }catch(e){}
+}
 
-function checarENotificar(){
-  if(Notification.permission !== 'granted') return;
-  const hoje = hojeDate();
-  const agoraStr = String(hoje.getHours()).padStart(2,'0') + ':' + String(hoje.getMinutes()).padStart(2,'0');
-  itens.filter(i => itemDevidoHoje(i, hoje)).forEach(item => {
-    const chave = hojeStr() + '_' + item.id;
-    if(item.hora === agoraStr && !jaNotificadoHoje[chave]){
-      jaNotificadoHoje[chave] = true;
-      dispararNotificacao(item.texto, item.hora);
+function avisar(item, soneca){
+  notificar(`${item.hora} · ${item.texto}`, 'rotina-' + item.id);
+  if(item.alarme !== false) mostrarAlarme(item, soneca);
+}
+
+function limparDisparosAntigos(){
+  const hj = hojeStr();
+  let mudou = false;
+  Object.keys(disparos).forEach(k => {
+    if(k.slice(0,10) < hj){ delete disparos[k]; mudou = true; }
+  });
+  if(mudou) gravarJSON(DISPAROS_KEY, disparos);
+}
+
+// Dispara lembretes: dentro de JANELA_MIN minutos depois do horário (cobre o caso do app
+// ter ficado em segundo plano), avisos de "amanhã" e alarmes adiados.
+function checarLembretes(){
+  const agora = hojeDate();
+  const hj = dataStr(agora);
+  const min = agora.getHours()*60 + agora.getMinutes();
+  let mudou = false;
+
+  itens.forEach(item => {
+    const est = estados[item.id] || {};
+    if(itemDevidoHoje(item, agora) && est.ultimaConclusao !== hj){
+      const delta = min - minutosDe(item.hora);
+      const k = hj + '|h|' + item.id;
+      if(delta >= 0 && delta < JANELA_MIN && !disparos[k]){
+        disparos[k] = 1; mudou = true;
+        avisar(item, false);
+      }
+    }
+    if(item.tipo !== 'diaria' && diasAteProximaOcorrencia(item, agora) === 1){
+      const k = hj + '|a|' + item.id;
+      if(!disparos[k]){
+        disparos[k] = 1; mudou = true;
+        notificar(`Amanhã às ${item.hora} · ${item.texto}`, 'rotina-amanha-' + item.id);
+      }
     }
   });
-}
+  if(mudou) gravarJSON(DISPAROS_KEY, disparos);
 
-function checarAvisoAmanha(){
-  if(Notification.permission !== 'granted') return;
-  const hoje = hojeDate();
-  const chaveDia = hojeStr();
-  itens.forEach(item => {
-    if(item.tipo === 'diaria') return;
-    if(diasAteProximaOcorrencia(item, hoje) !== 1) return;
-    const chave = 'rotina_aviso_amanha_' + chaveDia + '_' + item.id;
-    if(localStorage.getItem(chave)) return;
-    localStorage.setItem(chave, '1');
-    dispararNotificacao('Amanhã: ' + item.texto, item.hora);
+  let mudouS = false;
+  Object.keys(sonecas).forEach(id => {
+    if(Date.now() >= sonecas[id]){
+      delete sonecas[id]; mudouS = true;
+      const item = itens.find(i => i.id === id);
+      const est = estados[id] || {};
+      if(item && est.ultimaConclusao !== hj) avisar(item, true);
+    }
   });
+  if(mudouS) gravarJSON(SONECAS_KEY, sonecas);
 }
 
-function dispararNotificacao(texto, hora){
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.ready.then(reg => {
-      reg.showNotification('Rotina Diária', {
-        body: `${hora} — ${texto}`,
-        icon: './icons/icon.svg',
-        badge: './icons/icon.svg',
-        tag: 'rotina-' + hora,
-        vibrate: [200, 100, 200]
-      });
-    });
-  }else{
-    new Notification('Rotina Diária', { body: `${hora} — ${texto}` });
-  }
-}
-
-setInterval(() => {
+function ciclo(){
+  limparDisparosAntigos();
   atualizarPendencias();
-  checarENotificar();
-  checarAvisoAmanha();
+  checarLembretes();
   render();
-}, 20000);
-
-atualizarPendencias();
-checarAvisoAmanha();
+}
+setInterval(ciclo, 20000);
+document.addEventListener('visibilitychange', () => { if(!document.hidden) ciclo(); });
+window.addEventListener('focus', ciclo);
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW falhou:', err));
 }
 
-document.getElementById('ajuda').innerHTML =
-  'Tarefas semanais disparam nos dias marcados. Tarefas mensais disparam no dia do mês escolhido ' +
-  '(se o mês não tiver esse dia, tipo dia 31 em fevereiro, a tarefa não aparece naquele mês). ' +
-  'Uma tarefa vira "atrasada" quando o horário passa e ela não foi marcada como feita, e continua atrasada mesmo que o dia vire, ' +
-  'só saindo dessa lista quando você marcar como concluída. ' +
-  'Tarefas semanais e mensais que caem amanhã aparecem com o aviso "amanhã" na aba Todas as tarefas, e mandam uma notificação com um dia de antecedência. ' +
-  'Para os lembretes funcionarem em segundo plano, instale este site na tela inicial e evite que o Android force o fechamento do app.';
+$('ajuda').innerHTML =
+  'Toque no lápis de uma tarefa para mudar horário, texto ou repetição. ' +
+  'Em "Datas" você abre o calendário e marca quantos dias quiser. Em "Mensal" também dá para marcar vários dias do mês ' +
+  '(se o mês não tiver o dia 31, por exemplo, a tarefa não aparece naquele mês). ' +
+  'No horário da tarefa o app mostra uma notificação e toca um alarme com vibração; ' +
+  'você pode concluir, adiar 10 minutos ou parar o som. ' +
+  'Uma tarefa vira "atrasada" quando o horário passa sem ser marcada, e continua atrasada mesmo que o dia vire, até você concluir. ' +
+  'Tarefas que não são diárias avisam com um dia de antecedência. ' +
+  'Você pode dar uma categoria colorida a cada tarefa e filtrar a lista por ela. ' +
+  'Na aba Estatísticas você vê sua sequência de dias, o percentual cumprido e as tarefas que mais falham. ' +
+  'Em Ferramentas: salve um backup das tarefas (para não perder se limpar o Chrome), restaure em outro aparelho, envie as tarefas para o app de agenda do celular (que toca alarme mesmo com este app fechado) e mantenha a tela acesa durante o turno. ' +
+  'Atenção: os lembretes só disparam com o app aberto ou rodando em segundo plano. ' +
+  'Se o Android fechar o app, o alarme não toca; ao abrir de novo, tarefas que passaram do horário aparecem como atrasadas.';
 
+// --- Estatísticas ---
+function statsDoDia(dstr){
+  if(dstr < statsInicio) return { total: 0, feitas: 0 };
+  const d = dataDeStr(dstr);
+  const feitos = new Set(historico[dstr] || []);
+  const devidas = itens.filter(i => itemDevidoHoje(i, d) && (!i.criadoEm || i.criadoEm <= dstr));
+  return { total: devidas.length, feitas: devidas.filter(i => feitos.has(i.id)).length, devidas, feitos };
+}
+function diaOffset(n){
+  const h = hojeDate();
+  return dataStr(new Date(h.getFullYear(), h.getMonth(), h.getDate() - n));
+}
+function percentualPeriodo(dias){
+  let t = 0, f = 0;
+  for(let n = 0; n < dias; n++){
+    const r = statsDoDia(diaOffset(n));
+    t += r.total; f += r.feitas;
+  }
+  return t ? Math.round(f * 100 / t) : null;
+}
+function calcularSequencias(){
+  // percorre do primeiro dia de estatística até hoje
+  const inicio = dataDeStr(statsInicio);
+  const hoje = dataDeStr(hojeStr());
+  let atual = 0, melhor = 0, corrida = 0;
+  for(let d = new Date(inicio); d <= hoje; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)){
+    const ds = dataStr(d);
+    const r = statsDoDia(ds);
+    if(r.total === 0) continue;
+    if(r.feitas === r.total){ corrida++; if(corrida > melhor) melhor = corrida; }
+    else if(ds === hojeStr()){ /* hoje ainda pode ser completado: não quebra */ }
+    else corrida = 0;
+  }
+  atual = corrida;
+  return { atual, melhor };
+}
+function renderStats(lista){
+  const hojeR = statsDoDia(hojeStr());
+  const p7 = percentualPeriodo(7), p30 = percentualPeriodo(30);
+  const seq = calcularSequencias();
+  let totalConcl = 0;
+  Object.keys(historico).forEach(k => { if(k >= statsInicio) totalConcl += (historico[k] || []).length; });
+  const fmt = v => v === null ? '--' : v + '%';
+
+  // barras dos últimos 7 dias
+  let barras = '';
+  for(let n = 6; n >= 0; n--){
+    const ds = diaOffset(n);
+    const r = statsDoDia(ds);
+    const pct = r.total ? Math.round(r.feitas * 100 / r.total) : null;
+    const alt = pct === null ? 3 : Math.max(3, pct);
+    const cls = pct === null ? 'vazia' : (pct === 100 ? 'cheia' : '');
+    const nome = DIAS_NOME[dataDeStr(ds).getDay()].slice(0,3);
+    barras += `<div class="barra-col"><div class="barra-pct">${pct === null ? '' : pct + '%'}</div><div class="barra ${cls}" style="height:${alt}%"></div><div class="barra-dia">${nome}</div></div>`;
+  }
+
+  // tarefas mais esquecidas nos últimos 30 dias
+  const resumo = {};
+  for(let n = 0; n < 30; n++){
+    const r = statsDoDia(diaOffset(n));
+    if(!r.devidas) continue;
+    r.devidas.forEach(i => {
+      const x = resumo[i.id] || (resumo[i.id] = { texto: i.texto, tot: 0, ok: 0 });
+      x.tot++; if(r.feitos.has(i.id)) x.ok++;
+    });
+  }
+  const falhas = Object.values(resumo).filter(x => x.tot - x.ok > 0)
+    .sort((a,b) => (b.tot - b.ok) - (a.tot - a.ok)).slice(0,3);
+  const rank = falhas.length
+    ? falhas.map(x => `<div class="rank-linha"><span>${escapeHtml(x.texto)}</span><span>${x.tot - x.ok} de ${x.tot} falhas</span></div>`).join('')
+    : '<div class="vazio-coluna">Nenhuma falha registrada ainda.</div>';
+
+  lista.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat"><div class="rot">Hoje</div><div class="val">${hojeR.feitas}/${hojeR.total}</div><div class="sub">tarefas concluídas</div></div>
+      <div class="stat"><div class="rot">Sequência</div><div class="val">${seq.atual}</div><div class="sub">dias seguidos com tudo feito (melhor: ${seq.melhor})</div></div>
+      <div class="stat"><div class="rot">Últimos 7 dias</div><div class="val">${fmt(p7)}</div><div class="sub">de tarefas cumpridas</div></div>
+      <div class="stat"><div class="rot">Últimos 30 dias</div><div class="val">${fmt(p30)}</div><div class="sub">de tarefas cumpridas</div></div>
+    </div>
+    <div class="stat-bloco"><h3>Últimos 7 dias</h3><div class="barras">${barras}</div></div>
+    <div class="stat-bloco"><h3>Tarefas que mais falharam (30 dias)</h3>${rank}</div>
+    <div class="stat-bloco"><div class="rot" style="font-size:11px;color:var(--text-dim)">Total concluído desde ${formatarDataCurta(statsInicio)}</div><div class="val" style="font-family:'DM Mono',monospace;font-size:26px;color:var(--accent)">${totalConcl}</div></div>
+    <div class="ajuda">As estatísticas começam a contar a partir do dia ${formatarDataCurta(statsInicio)}, quando este recurso foi instalado. Dias sem tarefas previstas não entram na conta.</div>
+  `;
+}
+
+// --- Ferramentas: backup, agenda (.ics) e tela acesa ---
+function msgFerr(t){ $('msgFerramentas').textContent = t; }
+
+function baixarArquivo(nome, conteudo, tipo){
+  const blob = new Blob([conteudo], { type: tipo });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function gerarBackup(){
+  return JSON.stringify({ app: 'rotina-diaria', versao: 1, exportadoEm: new Date().toISOString(), itens, estados, historico, statsInicio }, null, 2);
+}
+function itemValido(i){
+  return i && typeof i.id === 'string' && /^\d{2}:\d{2}$/.test(i.hora || '') && typeof i.texto === 'string' &&
+    ['diaria','semanal','mensal','datas'].includes(i.tipo);
+}
+function restaurarBackup(texto){
+  let obj;
+  try{ obj = JSON.parse(texto); }catch(e){ return 'Arquivo inválido.'; }
+  if(!obj || obj.app !== 'rotina-diaria' || !Array.isArray(obj.itens)) return 'Este arquivo não é um backup do Rotina Diária.';
+  const validos = obj.itens.filter(itemValido);
+  if(validos.length === 0 && obj.itens.length > 0) return 'Nenhuma tarefa válida no arquivo.';
+  itens = validos;
+  estados = (obj.estados && typeof obj.estados === 'object') ? obj.estados : {};
+  historico = (obj.historico && typeof obj.historico === 'object') ? obj.historico : {};
+  if(typeof obj.statsInicio === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(obj.statsInicio)){
+    statsInicio = obj.statsInicio;
+    try{ localStorage.setItem(INICIO_KEY, statsInicio); }catch(e){}
+  }
+  gravarJSON(HISTORICO_KEY, historico);
+  disparos = {}; sonecas = {};
+  salvarItens(itens); salvarEstados(estados);
+  gravarJSON(DISPAROS_KEY, disparos); gravarJSON(SONECAS_KEY, sonecas);
+  atualizarPendencias(); render();
+  return validos.length + ' tarefa(s) restaurada(s).';
+}
+
+function icsEscape(t){
+  return String(t).replace(/\\/g,'\\\\').replace(/;/g,'\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+}
+function icsData(dstr, hhmm, addMin){
+  const d = dataDeStr(dstr);
+  const m = minutosDe(hhmm) + (addMin || 0);
+  const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, m);
+  return dataStr(dd).replace(/-/g,'') + 'T' + String(dd.getHours()).padStart(2,'0') + String(dd.getMinutes()).padStart(2,'0') + '00';
+}
+function gerarICS(){
+  const hoje = hojeDate();
+  const carimbo = new Date().toISOString().replace(/[-:]/g,'').slice(0,15) + 'Z';
+  const linhas = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Rotina Diaria//PT-BR','CALSCALE:GREGORIAN'];
+  const BYDAY = ['SU','MO','TU','WE','TH','FR','SA'];
+  let qtd = 0;
+  itens.forEach(item => {
+    // primeira ocorrência a partir de hoje
+    let inicio = null;
+    if(item.tipo === 'datas'){
+      inicio = (item.datas || []).slice().sort().find(s => s >= dataStr(hoje)) || null;
+    }else{
+      for(let i = 0; i < 400; i++){
+        const d = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + i);
+        if(itemDevidoHoje(item, d)){ inicio = dataStr(d); break; }
+      }
+    }
+    if(!inicio) return;
+    qtd++;
+    linhas.push('BEGIN:VEVENT');
+    linhas.push('UID:' + item.id + '@rotina-diaria');
+    linhas.push('DTSTAMP:' + carimbo);
+    linhas.push('DTSTART:' + icsData(inicio, item.hora, 0));
+    linhas.push('DTEND:' + icsData(inicio, item.hora, 15));
+    linhas.push('SUMMARY:' + icsEscape(item.texto));
+    if(item.nota) linhas.push('DESCRIPTION:' + icsEscape(item.nota));
+    if(catPorId(item.categoria)) linhas.push('CATEGORIES:' + icsEscape(catPorId(item.categoria).nome));
+    if(item.tipo === 'diaria') linhas.push('RRULE:FREQ=DAILY');
+    if(item.tipo === 'semanal') linhas.push('RRULE:FREQ=WEEKLY;BYDAY=' + (item.dias || []).slice().sort().map(d => BYDAY[d]).join(','));
+    if(item.tipo === 'mensal') linhas.push('RRULE:FREQ=MONTHLY;BYMONTHDAY=' + diasMesDe(item).sort((a,b)=>a-b).join(','));
+    if(item.tipo === 'datas'){
+      const extras = (item.datas || []).slice().sort().filter(s => s > inicio);
+      if(extras.length) linhas.push('RDATE:' + extras.map(s => icsData(s, item.hora, 0)).join(','));
+    }
+    linhas.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:' + icsEscape(item.texto),'TRIGGER:PT0S','END:VALARM');
+    linhas.push('END:VEVENT');
+  });
+  linhas.push('END:VCALENDAR');
+  return { texto: linhas.join('\r\n') + '\r\n', qtd };
+}
+
+$('btnBackup').addEventListener('click', () => {
+  baixarArquivo('rotina-backup-' + hojeStr() + '.json', gerarBackup(), 'application/json');
+  msgFerr('Backup salvo na pasta Downloads do celular.');
+});
+$('btnRestaurar').addEventListener('click', () => $('arqBackup').click());
+$('arqBackup').addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  if(!confirm('Restaurar vai substituir as tarefas atuais pelas do arquivo. Continuar?')){ e.target.value = ''; return; }
+  const leitor = new FileReader();
+  leitor.onload = () => { msgFerr(restaurarBackup(String(leitor.result))); e.target.value = ''; };
+  leitor.onerror = () => msgFerr('Não consegui ler o arquivo.');
+  leitor.readAsText(f);
+});
+$('btnIcs').addEventListener('click', () => {
+  const r = gerarICS();
+  if(r.qtd === 0){ msgFerr('Nenhuma tarefa com data futura para enviar.'); return; }
+  baixarArquivo('rotina-agenda.ics', r.texto, 'text/calendar');
+  msgFerr(r.qtd + ' tarefa(s) no arquivo. Abra o arquivo baixado e escolha o app Agenda do Google.');
+});
+
+// Tela sempre acesa (Wake Lock). Só funciona com o app aberto na tela.
+let wakeLock = null;
+let telaAcesa = false;
+try{ telaAcesa = localStorage.getItem('rotina_tela_acesa') === '1'; }catch(e){}
+function atualizarBtnTela(){
+  $('btnTela').textContent = 'Tela sempre acesa: ' + (telaAcesa ? 'ligada' : 'desligada');
+  $('btnTela').classList.toggle('ligado', telaAcesa);
+}
+async function pedirWakeLock(){
+  if(!telaAcesa || !('wakeLock' in navigator) || document.hidden) return;
+  try{
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', () => { wakeLock = null; });
+  }catch(e){}
+}
+$('btnTela').addEventListener('click', async () => {
+  if(!('wakeLock' in navigator)){ msgFerr('Este navegador não permite manter a tela acesa.'); return; }
+  telaAcesa = !telaAcesa;
+  try{ localStorage.setItem('rotina_tela_acesa', telaAcesa ? '1' : '0'); }catch(e){}
+  if(telaAcesa) await pedirWakeLock();
+  else if(wakeLock){ try{ await wakeLock.release(); }catch(e){} wakeLock = null; }
+  atualizarBtnTela();
+  msgFerr(telaAcesa ? 'A tela fica acesa enquanto o app estiver aberto. Isso gasta mais bateria.' : 'Tela acesa desligada.');
+});
+document.addEventListener('visibilitychange', () => { if(!document.hidden && telaAcesa && !wakeLock) pedirWakeLock(); });
+atualizarBtnTela();
+pedirWakeLock();
+
+limparDisparosAntigos();
+atualizarPendencias();
 render();
 atualizarStatusBanner();
+checarLembretes();
 </script>
 </body>
 </html>
