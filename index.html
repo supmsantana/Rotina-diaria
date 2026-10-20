@@ -1547,7 +1547,14 @@ document.addEventListener('visibilitychange', () => { if(!document.hidden) ciclo
 window.addEventListener('focus', ciclo);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW falhou:', err));
+  const tinhaControle = !!navigator.serviceWorker.controller;
+  let recarregou = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if(tinhaControle && !recarregou){ recarregou = true; location.reload(); }
+  });
+  navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+    .then(reg => reg.update())
+    .catch(err => console.warn('SW falhou:', err));
 }
 
 $('ajuda').innerHTML =

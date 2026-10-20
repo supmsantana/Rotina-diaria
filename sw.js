@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotina-cache-v8';
+const CACHE_NAME = 'rotina-cache-v9';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -7,7 +7,9 @@ const ASSETS = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache =>
+      cache.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))
+    )
   );
   self.skipWaiting();
 });
@@ -21,9 +23,26 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+// A página (index.html) vem sempre da internet primeiro, para pegar a versão nova.
+// Sem internet, usa a cópia guardada. Os outros arquivos continuam vindo da cópia.
 self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const ehPagina = req.mode === 'navigate' || req.url.endsWith('/index.html') || req.url.endsWith('/');
+  if (ehPagina) {
+    event.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .then(resp => {
+          const copia = resp.clone();
+          caches.open(CACHE_NAME).then(c => c.put('./index.html', copia));
+          return resp;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
   event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request))
+    caches.match(req).then(cached => cached || fetch(req))
   );
 });
 
