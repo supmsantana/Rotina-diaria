@@ -215,7 +215,7 @@
     text-transform:uppercase;
     letter-spacing:0.4px;
   }
-  .item .texto .badge{ display:table; margin:5px 0 0; }
+  .item .texto .badge{ display:table; margin:5px 0 0; white-space:nowrap; }
   .badge.amanha{
     background:var(--warn);
     color:#2b1c00;
@@ -904,7 +904,7 @@ function tagDoItem(item){
 }
 function tagBase(item, alarme){
   if(item.tipo === 'semanal'){
-    const nomes = (item.dias || []).slice().sort().map(d => DIAS_LABEL[d]).join(' ');
+    const nomes = (item.dias || []).slice().sort().map(d => DIAS_NOME[d].slice(0,3)).join(', ');
     return 'Semanal · ' + nomes + alarme;
   }
   if(item.tipo === 'mensal') return 'Mensal · dia ' + diasMesDe(item).sort((a,b)=>a-b).join(', ') + alarme;
