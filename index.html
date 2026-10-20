@@ -215,7 +215,7 @@
     text-transform:uppercase;
     letter-spacing:0.4px;
   }
-  .item .texto .badge{ display:table; margin:5px 0 0; white-space:nowrap; }
+  .item .texto .badge{ display:table; margin:5px 0 0; max-width:100%; letter-spacing:0.2px; }
   .badge.amanha{
     background:var(--warn);
     color:#2b1c00;
@@ -897,7 +897,7 @@ function classificarItem(item, hoje){
 }
 
 function tagDoItem(item){
-  const alarme = item.alarme === false ? '' : ' · ⏰';
+  const alarme = item.alarme === false ? '' : ' ⏰';
   const c = catPorId(item.categoria);
   const pre = c ? c.nome + ' · ' : '';
   return pre + tagBase(item, alarme);
